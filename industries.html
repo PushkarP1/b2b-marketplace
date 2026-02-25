@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Industries • B2B Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+<div class="gate" aria-hidden="false">
+    <div class="gateCard" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+      <div class="gateIn">
+        <div class="gateTop">
+          <div class="gateLogo" aria-hidden="true"><img src="assets/images/triangle-logo.svg" alt="" /></div>
+          <div>
+            <h2 class="gateTitle" id="gateTitle">Triangle Mark + B2B Marketplace</h2>
+            <p class="gateSub">Portfolio access gate. Enter the password to view the prototype.</p>
+          </div>
+        </div>
+        <form class="gateForm" id="gateForm">
+          <div class="field"><label for="gatePassword">Password</label><input id="gatePassword" type="password" autocomplete="current-password" /></div>
+          <div class="gateBtns"><button class="btn btn-primary" type="submit">Unlock</button><button class="btn" id="gateLock" type="button">Lock</button></div>
+          <p class="gateErr" id="gateError">Incorrect password. Try again.</p>
+          <p class="gateHint">Tip: this is a client-side gate for portfolio viewing only.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-row">
+        <a class="logo" href="index.html"><img src="assets/images/triangle-logo.svg" alt="Triangle Mark" /><span class="brand">B2B Marketplace</span></a>
+        <nav class="nav" aria-label="Primary">
+          <a href="products.html">Products</a>
+          <a href="industries.html" style="color:var(--red); font-weight:800;">Industries</a>
+          <a href="services.html">Services</a>
+          <a href="resources.html">Resources</a>
+        </nav>
+        <div class="header-actions">
+          <div class="search" role="search">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input class="input" type="search" placeholder="Search industries, solutions..." />
+          </div>
+          <a class="user-chip" href="dashboard.html"><span class="name">Henry Ford</span><img class="avatar" src="assets/images/25edcccbd30668c43241acb53e6e6ee718537770.png" alt="Henry Ford" /></a>
+          <button class="btn btn-dark" type="button">Sign Out</button>
+        </div>
+      </div>
+      <nav class="mobile-nav" aria-label="Primary mobile">
+        <a href="products.html">Products</a>
+        <a href="industries.html">Industries</a>
+        <a href="services.html">Services</a>
+        <a href="resources.html">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"  class="bg2" style="padding: 26px 0 64px;">
+    <div class="container">
+      <div class="page-head">
+        <h1 style="font-size: 2.2rem;">Industries We Serve</h1>
+        <p class="p" style="margin:10px 0 0; max-width: 60ch;">Specialized procurement solutions tailored to the unique needs of different industries.</p>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(1, minmax(0,1fr)); gap: 18px;">
+        <a class="card hover" href="products.html" style="padding: 22px;">
+          <h3 style="font-weight:900;">Manufacturing</h3>
+          <p class="p" style="margin-top: 8px;">Industrial supplies, safety equipment, and machinery parts.</p>
+        </a>
+        <a class="card hover" href="products.html" style="padding: 22px;">
+          <h3 style="font-weight:900;">Construction</h3>
+          <p class="p" style="margin-top: 8px;">Building materials, tools, and job site safety solutions.</p>
+        </a>
+        <a class="card hover" href="products.html" style="padding: 22px;">
+          <h3 style="font-weight:900;">Healthcare</h3>
+          <p class="p" style="margin-top: 8px;">Medical supplies, facility maintenance, and PPE equipment.</p>
+        </a>
+        <a class="card hover" href="products.html" style="padding: 22px;">
+          <h3 style="font-weight:900;">Automotive</h3>
+          <p class="p" style="margin-top: 8px;">Parts, tools, diagnostics, and shop supply procurement.</p>
+        </a>
+        <a class="card hover" href="products.html" style="padding: 22px;">
+          <h3 style="font-weight:900;">Education</h3>
+          <p class="p" style="margin-top: 8px;">Maintenance supplies, technology, and classroom equipment.</p>
+        </a>
+        <a class="card hover" href="products.html" style="padding: 22px;">
+          <h3 style="font-weight:900;">Hospitality</h3>
+          <p class="p" style="margin-top: 8px;">Cleaning supplies, facility management, and guest services.</p>
+        </a>
+      </div>
+
+      <div class="card" style="padding: 26px; margin-top: 18px;">
+        <h2 style="font-size: 1.6rem;">Need a custom industry solution?</h2>
+        <p class="p" style="margin: 10px 0 0;">Contact our procurement specialists to discuss your specific requirements.</p>
+        <div style="margin-top: 14px;"><a class="btn btn-primary" href="services.html">Contact Sales</a></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="padding: 38px 16px;">
+      <div style="opacity:.75; font-size: 12px;">© 2026 Triangle Mark + B2B Marketplace (portfolio prototype)</div>
+    </div>
+  </footer>
+
+  
+  <!-- Command Palette (Ctrl/⌘K) -->
+  <div class="palette" id="cmdk" aria-hidden="true">
+    <div class="card">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <label class="sr-only" for="cmdkInput">Search commands</label>
+        <input class="input" id="cmdkInput" type="search" placeholder="Search products, SKUs, actions…" autocomplete="off" />
+        <span class="kbd" aria-hidden="true">Esc</span>
+      </div>
+      <div class="palette-list" id="cmdkList" role="listbox" aria-label="Command results"></div>
+      <div style="display:flex; justify-content:space-between; margin-top:10px; color:var(--muted2); font-size:12px;">
+        <div><span class="kbd">↑</span> <span class="kbd">↓</span> to navigate</div>
+        <div><span class="kbd">Enter</span> to run</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="backdrop" id="backdrop" tabindex="-1" aria-hidden="true"></div>
+  <aside class="drawer" id="cartDrawer" aria-label="Cart" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <div style="font-weight:900; font-size: 1.05rem;">Cart &amp; PO Summary</div>
+        <div class="mini" id="cartMeta">0 items • $0.00</div>
+      </div>
+      <button class="btn btn-icon" type="button" data-close-drawer aria-label="Close cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="card" style="padding:12px;">
+        <div style="font-weight:900; margin-bottom:8px;">Ship to branch</div>
+        <label class="sr-only" for="shipBranch">Select branch</label>
+        <select class="input" id="shipBranch">
+          <option>Vancouver, BC</option>
+          <option>Surrey, BC</option>
+          <option>Richmond, BC</option>
+          <option>Calgary, AB</option>
+          <option>Edmonton, AB</option>
+        </select>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <span class="badge">Budget cap: $40,000/mo</span>
+          <span class="badge" id="budgetImpact">Impact: —</span>
+        </div>
+      </div>
+
+      <div id="cartItems" aria-live="polite"></div>
+
+      <div class="card" style="padding:12px;">
+        <div style="font-weight:900; margin-bottom:8px;">Approver chain</div>
+        <div class="mini">Auto Garage • Multi-branch policy</div>
+        <div style="display:grid; gap:8px; margin-top:10px;">
+          <div class="drawer-row"><span>Henry Ford</span><span class="badge">Requester</span></div>
+          <div class="drawer-row"><span>Ops Manager</span><span class="badge">Tier 1</span></div>
+          <div class="drawer-row"><span>Finance</span><span class="badge">Tier 2</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-foot">
+      <div class="drawer-row" style="margin-bottom:10px;">
+        <strong>Total</strong>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <button class="btn btn-primary" type="button" id="submitPO">Submit Purchase Order</button>
+      <button class="btn" type="button" id="clearCart" style="width:100%; margin-top:10px;">Clear cart</button>
+      <p class="mini" style="margin:10px 0 0;">Demo logic: orders over $5,000 route to approval.</p>
+    </div>
+  </aside>
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/js/gate.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
