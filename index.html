@@ -1176,7 +1176,7 @@ h3{font-size:1.125rem; margin:0}
 </div>
 </div>
 <div class="chart-box">
-<canvas aria-label="Spend over time with budget and target benchmarks" id="spendChart" role="img"></canvas>
+<canvas aria-label="Spend over time with budget and target benchmarks" id="spendChartDash" role="img"></canvas>
 </div>
 </div>
 <!-- Category spend + Approvals -->
@@ -2267,7 +2267,7 @@ h3{font-size:1.125rem; margin:0}
   let spendChart, categoryChart, approvalChart, savingsChart, forecastChart;
 
   function initSpend(){
-    const el = document.getElementById('spendChart');
+    const el = document.getElementById('spendChartDash');
     if (!el) return;
 
     const ctx = el.getContext('2d');
