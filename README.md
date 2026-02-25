@@ -1,3 +1,3 @@
-K-Pop inspired boutique hotel
+B2B-marketplace
 
 Site is live at: https://pushkarp1.github.io/b2b-marketplace/
