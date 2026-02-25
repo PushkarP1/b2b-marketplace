@@ -1,0 +1,2633 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Triangle Mark + B2B Marketplace</title>
+  <meta name="description" content="A high-end B2B marketplace prototype for procurement managers." />
+
+  <!-- =====================
+       Typography
+       - Lato 400/700 as requested
+       ===================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- =====================
+       Styles (inline for easier iteration)
+       ===================== -->
+  <style>
+/* B2B Marketplace (static HTML recreation)
+   - Desktop-first responsive
+   - Lato typography
+   - Red/white/black palette
+   - WCAG-friendly focus + contrast
+*/
+
+:root{
+  --bg:#ffffff;
+  --bg2:#f9fafb;
+  --surface:#ffffff;
+  --surface2:#f3f4f6;
+  --text:#111827;
+  --muted:#4b5563;
+  --muted2:#6b7280;
+  --line:#e5e7eb;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --shadow: 0 10px 30px rgba(17,24,39,.12);
+  --shadow-xl: 0 24px 60px rgba(17,24,39,.18);
+  --radius: 14px;
+  --radius-lg: 18px;
+
+  --red:#EC2028;
+  --red-700:#C81E24;
+  --yellow:#fbbf24;
+  --gray-900:#111827;
+
+  --container: 1280px;
+  --navH: 80px;
+
+  --focus: 0 0 0 3px rgba(220,38,38,.28);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+
+body{
+  margin:0;
+  font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color:var(--text);
+  background: var(--bg);
+}
+
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+
+.container{max-width:var(--container); margin:0 auto; padding:0 16px}
+@media (min-width:640px){.container{padding:0 24px}}
+
+/* Typography */
+h1,h2,h3{letter-spacing:-.02em}
+h1{font-size: clamp(2.25rem, 3.4vw, 3.75rem); line-height:1.05; margin:0}
+h2{font-size: clamp(1.7rem, 2.4vw, 2rem); margin:0}
+h3{font-size:1.125rem; margin:0}
+
+.p-lg{font-size:1.125rem; color:var(--muted); line-height:1.6}
+.p{font-size:1rem; color:var(--muted); line-height:1.6}
+
+/* Focus */
+:focus-visible{outline:none; box-shadow: var(--focus); border-radius: 10px}
+
+/* Header */
+.site-header{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.9); backdrop-filter: blur(10px); border-bottom:1px solid var(--line)}
+.header-row{height:var(--navH); display:flex; align-items:center; justify-content:space-between; gap:16px}
+.logo{display:flex; align-items:center; gap:10px}
+.logo img{width:40px; height:40px}
+.logo .brand{font-weight:800; letter-spacing:-.02em}
+
+.nav{display:none; align-items:center; gap:22px; color:var(--muted)}
+.nav a{display:flex; align-items:center; gap:6px; padding:10px 6px; border-radius:10px}
+.nav a:hover{color:var(--red)}
+
+.header-actions{display:flex; align-items:center; gap:12px}
+.search{position:relative; display:none}
+.search input{width:360px; height:44px; border:1px solid var(--line); border-radius:12px; padding:0 14px 0 40px; background:#fff; color:var(--text)}
+.search .icon{position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; opacity:.55}
+
+.user-chip{display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:999px; border:1px solid transparent}
+.user-chip:hover{border-color: var(--line); background: rgba(249,250,251,.7)}
+.user-chip .name{font-weight:700}
+.avatar{width:40px; height:40px; border-radius:999px; object-fit:cover; border:2px solid var(--red)}
+
+@media (min-width:1024px){
+  .nav{display:flex}
+}
+@media (min-width:768px){
+  .search{display:block}
+}
+
+.mobile-nav{display:flex; gap:14px; padding:0 0 12px; overflow:auto; color:var(--muted)}
+.mobile-nav a{white-space:nowrap; font-size:.9rem; padding:8px 10px; border-radius:999px; border:1px solid var(--line); background:#fff}
+.mobile-nav a:hover{border-color:rgba(220,38,38,.35); color:var(--red)}
+@media (min-width:1024px){.mobile-nav{display:none}}
+
+/* Buttons */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; height:44px; padding:0 14px; border-radius:12px; border:1px solid var(--line); background:#fff; color:var(--text); font-weight:700; cursor:pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease}
+.btn:hover{transform: translateY(-1px); box-shadow: var(--shadow-sm)}
+.btn:active{transform: translateY(0)}
+.btn-primary{background:var(--red); border-color:var(--red); color:#fff}
+.btn-primary:hover{background:var(--red-700); border-color:var(--red-700); box-shadow: var(--shadow)}
+.btn-dark{background:var(--gray-900); border-color:var(--gray-900); color:#fff}
+.btn-dark:hover{background:#0b1220; border-color:#0b1220}
+.btn-outline{background:#fff; border-color: rgba(220,38,38,.9); color: var(--red)}
+.btn-outline:hover{background: rgba(220,38,38,.06)}
+.btn-ghost{background:transparent; border-color:transparent; color:var(--red)}
+.btn-ghost:hover{background: rgba(220,38,38,.07)}
+.btn-icon{width:44px; padding:0; border-radius:999px}
+
+/* Inputs */
+.input{height:44px; border:1px solid var(--line); border-radius:12px; padding:0 12px; width:100%; font-size:14px}
+.input:focus{outline:none; box-shadow: var(--focus)}
+
+/* Card */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow: var(--shadow-sm)}
+.card.hover:hover{box-shadow: var(--shadow)}
+
+/* Layout utilities */
+.section{padding:64px 0}
+.section.sm{padding:44px 0}
+.bg2{background:var(--bg2)}
+.grid{display:grid; gap:24px}
+
+/* Hero */
+.hero{position:relative; min-height: 620px; display:flex; align-items:center; overflow:hidden; background:#f3f4f6}
+.hero .hero-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform: translateY(var(--parallax, 0px)); transition: transform .1s ease-out}
+.hero .overlay{position:absolute; inset:0; background: linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.55), rgba(0,0,0,0))}
+.hero .content{position:relative; z-index:2; padding: 70px 0}
+.hero .content p{color: rgba(255,255,255,.9)}
+
+/* Chips / badges */
+.badge{display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:700; border:1px solid var(--line); background:#fff}
+.badge.dark{background: linear-gradient(90deg, #9ca3af, #4b5563); color:#fff; border-color:transparent}
+.tag{font-size:10px; padding:2px 8px; border-radius:999px; background:#f3f4f6; color:var(--muted)}
+
+/* Tables / lists */
+.hr{height:1px; background:var(--line)}
+
+/* Horizontal carousel */
+.hscroll{display:flex; gap:16px; overflow:auto; padding-bottom:10px; scroll-snap-type:x mandatory}
+.hscroll::-webkit-scrollbar{height:8px}
+.hscroll::-webkit-scrollbar-thumb{background:#e5e7eb; border-radius:999px}
+.hscroll > .tile{flex:0 0 auto; scroll-snap-align:start}
+
+/* Product cards */
+.prod{border-radius:16px; border:1px solid var(--line); background:#fff; padding:14px; transition: transform .2s ease, box-shadow .2s ease; position:relative}
+.prod:hover{transform: translateY(-2px) scale(1.02); box-shadow: var(--shadow)}
+.prod .thumb{width:100%; aspect-ratio:1/1; border-radius:12px; background:#e5e7eb; overflow:hidden; margin-bottom:10px}
+.prod .thumb img{width:100%; height:100%; object-fit:cover}
+
+/* Footer */
+.site-footer{background: var(--gray-900); color:#fff}
+.site-footer a{color: rgba(255,255,255,.72)}
+.site-footer a:hover{color:#fff}
+.footer-grid{display:grid; gap:26px}
+@media (min-width:768px){.footer-grid{grid-template-columns: repeat(2, 1fr)}}
+@media (min-width:1024px){.footer-grid{grid-template-columns: repeat(4, 1fr)}}
+
+/* Page header */
+.page-head{padding:44px 0 22px}
+
+/* Dashboard chart */
+.chart-wrap{width:100%; height:320px}
+.chart-svg{width:100%; height:100%}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .btn, .prod, .card, .hero .hero-bg{transition:none !important}
+}
+
+
+/* Accessibility helpers */
+.skip-link{position:absolute; left:-999px; top:10px; background:#111827; color:#fff; padding:10px 12px; border-radius:12px; z-index:1000}
+.skip-link:focus{left:12px; box-shadow: var(--focus)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+
+/* Motion system */
+:root{
+  --t-micro: 140ms;
+  --t-reveal: 280ms;
+  --t-drawer: 220ms;
+  --e-out: cubic-bezier(.2,.9,.2,1);
+}
+.reveal{opacity:0; transform: translateY(10px); transition: opacity var(--t-reveal) var(--e-out), transform var(--t-reveal) var(--e-out)}
+.reveal.is-in{opacity:1; transform:none}
+
+/* Tabs */
+.tabs{display:flex; flex-wrap:wrap; gap:10px}
+.tab{height:40px; padding:0 12px; border-radius:999px; border:1px solid var(--line); background:#fff; font-weight:800; color:var(--muted); cursor:pointer; transition: background var(--t-micro) ease, transform var(--t-micro) ease, box-shadow var(--t-micro) ease}
+.tab:hover{transform: translateY(-1px); box-shadow: var(--shadow-sm); color: var(--text)}
+.tab[aria-selected="true"]{border-color: rgba(236,32,40,.35); background: rgba(236,32,40,.06); color: var(--text)}
+.tabpanes{position:relative}
+.tabpane{display:none}
+.tabpane.is-active{display:block}
+.tabpane.anim-in{animation: tabIn var(--t-reveal) var(--e-out) both}
+@keyframes tabIn{from{opacity:0; transform: translateY(8px)} to{opacity:1; transform:none}}
+
+/* Drawer (Cart / Details) */
+.backdrop{position:fixed; inset:0; background: rgba(17,24,39,.55); display:none; z-index:200}
+.backdrop.open{display:block}
+.drawer{position:fixed; top:0; right:0; height:100%; width:min(460px, 96vw); background:#fff; border-left:1px solid var(--line); box-shadow: var(--shadow-xl); transform: translateX(102%); transition: transform var(--t-drawer) var(--e-out); z-index:250; display:flex; flex-direction:column}
+.drawer.open{transform: translateX(0)}
+.drawer-head{padding:18px 18px 12px; border-bottom:1px solid var(--line); display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+.drawer-body{padding:14px 18px; overflow:auto; display:grid; gap:14px}
+.drawer-foot{padding:14px 18px; border-top:1px solid var(--line); background: var(--bg2)}
+.drawer-row{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.drawer-item{display:flex; gap:12px; align-items:center}
+.drawer-item img{width:64px; height:64px; border-radius:14px; object-fit:cover; border:1px solid var(--line)}
+.qty{display:flex; align-items:center; gap:8px}
+.qty button{width:34px; height:34px; border-radius:10px}
+.mini{font-size:12px; color:var(--muted2)}
+
+/* Command palette */
+.palette{position:fixed; inset:0; display:none; place-items:center; padding:18px; z-index:300}
+.palette.open{display:grid}
+.palette .card{width:min(720px, 96vw); padding:14px; border-radius: 18px}
+.palette input{height:50px; font-size:16px}
+.palette-list{margin-top:10px; display:grid; gap:8px; max-height:min(52vh, 520px); overflow:auto}
+.palette-item{display:flex; justify-content:space-between; gap:12px; align-items:center; padding:10px 12px; border-radius:14px; border:1px solid var(--line); background:#fff; cursor:pointer; transition: transform var(--t-micro) ease, box-shadow var(--t-micro) ease}
+.palette-item:hover{transform: translateY(-1px); box-shadow: var(--shadow-sm)}
+.kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:12px; color:var(--muted2); border:1px solid var(--line); border-bottom-color:#cbd5e1; padding:2px 6px; border-radius:8px; background:#fff}
+
+/* Skeleton shimmer */
+.skel{position:relative; overflow:hidden; background:#eef2f7; border-radius:12px}
+.skel::after{content:""; position:absolute; inset:-60% -60%; transform: rotate(12deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation: shimmer 1.25s infinite}
+@keyframes shimmer{from{transform: translateX(-40%) rotate(12deg)} to{transform: translateX(40%) rotate(12deg)}}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal, .tabpane.anim-in, .drawer{transition:none !important; animation:none !important}
+  .skel::after{animation:none !important}
+}
+
+/* -------- Password Gate (kept from your base file) -------- */
+.gate{position: fixed; inset: 0; z-index: 9999; display: none; place-items: center; padding: 22px; background:
+  radial-gradient(900px 600px at 15% 10%, rgba(220,38,38,.10), transparent 55%),
+  radial-gradient(900px 600px at 85% 20%, rgba(17,24,39,.12), transparent 55%),
+  linear-gradient(180deg, #ffffff, #fbfbff);
+}
+.gateCard{width: min(520px, 96vw); border-radius: 22px; border: 1px solid var(--line); background: rgba(255,255,255,.92); box-shadow: 0 30px 90px rgba(16, 24, 40, .16); overflow:hidden;}
+.gateIn{padding: 18px 18px 16px;}
+.gateTop{display:flex; align-items:center; gap: 12px; margin-bottom: 12px;}
+.gateLogo{width: 44px; height: 44px; border-radius: 16px; border: 1px solid rgba(0,0,0,.10); background: #fff; display:grid; place-items:center; overflow:hidden; flex:0 0 auto;}
+.gateLogo img{width:100%; height:100%; object-fit:contain; display:block;}
+.gateTitle{margin:0; font-size: 16px; letter-spacing: -0.01em;}
+.gateSub{margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5;}
+.gateForm{display:grid; gap: 10px; margin-top: 12px;}
+.gateForm label{font-size: 12px; color: var(--muted);}
+.gateForm input[type="password"]{width:100%; height:46px; border-radius:14px; border:1px solid rgba(0,0,0,.14); background:#fff; padding:0 12px; font-size:14px; color:var(--text)}
+.gateForm input[type="password"]:focus{outline:none; box-shadow: var(--focus);}
+.gateBtns{display:flex; gap:10px; margin-top: 8px;}
+.gateHint{margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height:1.5;}
+.gateErr{margin: 8px 0 0; color: #b91c1c; font-weight:700; font-size: 12px; display:none;}
+
+
+/* Products page */
+.product-layout{display:grid; gap:24px; grid-template-columns: 1fr;}
+@media (min-width:1024px){.product-layout{grid-template-columns: 320px 1fr;}}
+
+.filter-card{padding:18px}
+.filter-group{margin-top:14px}
+.filter-title{font-weight:900; margin-bottom:10px}
+.check{display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted)}
+.check input{width:16px; height:16px}
+
+.product-grid{display:grid; gap:18px; grid-template-columns: repeat(2, minmax(0,1fr));}
+@media (min-width:768px){.product-grid{grid-template-columns: repeat(3, minmax(0,1fr));}}
+@media (min-width:1280px){.product-grid{grid-template-columns: repeat(4, minmax(0,1fr));}}
+
+/* Simple tab animation helper */
+.fade-swap{position:relative}
+.fade-panel{opacity:0; transform: translateY(6px); transition: opacity .22s ease, transform .22s ease;}
+.fade-panel.active{opacity:1; transform: translateY(0)}
+@media (prefers-reduced-motion: reduce){.fade-panel{transition:none}}
+
+
+/* --- Home: Deals grid --- */
+.deals-grid{grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px}
+@media (max-width: 900px){
+  .deals-grid{grid-template-columns: 1fr}
+}
+
+/* Inverse / premium CTA for dark surfaces */
+.btn-inverse{background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.24); color:#fff}
+.btn-inverse:hover{background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.34)}
+.btn-inverse i{width:18px; height:18px}
+
+/* --- Dashboard polish --- */
+.h1{font-size:2.15rem; font-weight:900; letter-spacing:-.02em}
+.h3{font-size:1.1rem; font-weight:900; letter-spacing:-.01em}
+.num{color: var(--red)}
+.eyebrow{font-size:12px; color: var(--muted2); font-weight:800; text-transform:uppercase; letter-spacing:.08em}
+.badge-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+
+.dash-head{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap}
+.dash-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.dash-actions .btn i{width:18px; height:18px}
+
+.dash-profile{padding: 18px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap}
+.dash-profile-left{display:flex; align-items:center; gap:14px}
+.dash-avatar{width:68px; height:68px; border-radius:999px; object-fit:cover; border:3px solid rgba(236,32,40,.95)}
+.dash-name{font-weight:900; font-size:1.35rem}
+.dash-role{color: var(--muted2); margin-top:2px}
+.dash-profile-metrics{display:flex; gap:14px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
+.dash-metric{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:14px; background:#fff}
+.dash-metric-ic{width:40px; height:40px; border-radius:12px; background: rgba(17,24,39,.06); display:flex; align-items:center; justify-content:center}
+.dash-metric-ic i{width:18px; height:18px}
+.dash-metric-val{font-weight:900}
+
+.kpi-grid{grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px}
+@media (max-width: 1000px){.kpi-grid{grid-template-columns: repeat(2, minmax(0,1fr));}}
+@media (max-width: 520px){.kpi-grid{grid-template-columns: 1fr;}}
+.kpi{padding: 18px}
+.kpi-ic{width:44px; height:44px; border-radius:14px; background: rgba(17,24,39,.06); display:flex; align-items:center; justify-content:center; margin-bottom: 12px}
+.kpi-ic i{width:20px; height:20px}
+.kpi-val{font-weight:900; font-size: 1.65rem}
+
+.dash-overview-grid{grid-template-columns: 1fr; gap:18px}
+.dash-card{padding: 18px}
+.dash-card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap}
+.dash-right{display:flex; flex-direction:column; gap:10px; align-items:flex-end}
+
+.segmented{display:inline-flex; padding:4px; border-radius:999px; border:1px solid var(--line); background:#fff}
+.seg{height:34px; padding:0 12px; border-radius:999px; border:1px solid transparent; background:transparent; font-weight:800; color: var(--muted2); cursor:pointer}
+.seg.is-active{background: rgba(236,32,40,.10); color: var(--red); border-color: rgba(236,32,40,.18)}
+
+.chart-box{margin-top: 12px; background:#fff; border:1px solid var(--line); border-radius: 16px; padding: 12px}
+.chart-box.small{padding: 10px}
+.chart-box canvas{width:100% !important; height: 320px !important}
+.chart-box.small canvas{height: 240px !important}
+
+.dash-split{grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px}
+@media (max-width: 980px){.dash-split{grid-template-columns: 1fr;}}
+
+.heatmap{display:grid; gap:10px; margin-top: 10px}
+.heat-row{display:grid; grid-template-columns: 52px 1fr 150px; gap:12px; align-items:center}
+@media (max-width: 720px){.heat-row{grid-template-columns: 52px 1fr;}.heat-note{display:none}}
+.heat-label{font-weight:900}
+.heat-note{color: var(--muted2); font-size:12px; text-align:right}
+.heat-cells{display:flex; gap:10px}
+.heat{display:inline-block; width:54px; height:16px; border-radius:999px; border:1px solid rgba(17,24,39,.08)}
+.heat.c1{background: rgba(17,24,39,.06)}
+.heat.c2{background: rgba(236,32,40,.12)}
+.heat.c3{background: rgba(236,32,40,.22)}
+.heat.c4{background: rgba(236,32,40,.34)}
+.heat.c5{background: rgba(236,32,40,.46)}
+
+.dash-filters{display:flex; gap:10px; flex-wrap:wrap}
+.dash-filters .input{width: 200px}
+@media (max-width: 520px){.dash-filters .input{width:100%}}
+
+.timeline{margin-top: 10px; display:grid; gap:10px}
+.timeline .item{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:12px; border:1px solid var(--line); border-radius:14px; background:#fff}
+.timeline .left{display:flex; gap:10px; align-items:flex-start}
+.timeline .dot{width:10px; height:10px; border-radius:999px; background: var(--red); margin-top:6px}
+.timeline .meta{color: var(--muted2); font-size:12px}
+
+.ai-bar{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--line); border-radius:16px; background:#fff; margin-top: 12px}
+.ai-bar i{width:20px; height:20px; color: var(--red)}
+.ai-bar .input{flex:1}
+
+
+
+/* --- Hotfix: ensure hero headline is white --- */
+.hero h1{color:#fff;}
+
+/* To change the hero headline color for “Simplifying your business procurement needs”, edit .hero h1 above. */
+
+  </style>
+</head>
+<body>
+  <!-- Skip link for keyboard users (WCAG) -->
+  <a class="skip-link" href="#appMain">Skip to content</a>
+
+  <!-- =====================
+       Password Gate (kept intact; password: PSI)
+       NOTE: This is a polite client-side gate, not real security.
+       ===================== -->
+  <div class="gate" aria-hidden="false">
+    <div class="gateCard" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+      <div class="gateIn">
+        <div class="gateTop">
+          <div class="gateLogo" aria-hidden="true">
+            <img src="assets/images/triangle-logo.svg" alt="" />
+          </div>
+          <div>
+            <h2 class="gateTitle" id="gateTitle">Triangle Mark + B2B Marketplace</h2>
+            <p class="gateSub">Portfolio access gate. Enter the password to view the prototype.</p>
+          </div>
+        </div>
+
+        <form class="gateForm" id="gateForm">
+          <div class="field">
+            <label for="gatePassword">Password</label>
+            <input id="gatePassword" type="password" autocomplete="current-password" inputmode="text" />
+          </div>
+
+          <div class="gateBtns">
+            <button class="btn btn-primary" type="submit">Unlock</button>
+            <button class="btn" id="gateLock" type="button">Lock</button>
+          </div>
+
+          <p class="gateErr" id="gateError">Incorrect password. Try again.</p>
+          <p class="gateHint">Tip: this is a client-side gate for portfolio viewing only.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================
+       Global Header / Navigation
+       Single-file hash routing: #home #products #dashboard #resources #industries #services
+       ===================== -->
+  <header class="site-header">
+<div class="container">
+<div class="header-row">
+<a aria-label="Home" class="logo" data-nav="home" href="#home">
+<img alt="Triangle Mark" src="assets/images/triangle-logo.svg"/>
+<span class="brand">B2B Marketplace</span>
+</a>
+<nav aria-label="Primary" class="nav">
+<a data-nav="products" href="#products">Products
+            <svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a data-nav="industries" href="#industries">Industries
+            <svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a data-nav="services" href="#services">Services
+            <svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a data-nav="resources" href="#resources">Resources
+            <svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</nav>
+<div class="header-actions">
+<div class="search" role="search">
+<svg aria-hidden="true" class="icon" fill="none" viewbox="0 0 24 24"><path d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg>
+<input aria-label="Search" class="input" placeholder="Search products, SKUs or suppliers..." type="search"/>
+</div>
+<a class="user-chip" href="dashboard.html">
+<span class="name">Henry Ford</span>
+<img alt="Henry Ford" class="avatar" src="assets/images/25edcccbd30668c43241acb53e6e6ee718537770.png"/>
+</a>
+<button aria-label="Sign out" class="btn btn-dark" type="button">Sign Out</button>
+</div>
+</div>
+<nav aria-label="Primary mobile" class="mobile-nav">
+<a data-nav="products" href="#products">Products</a>
+<a data-nav="industries" href="#industries">Industries</a>
+<a data-nav="services" href="#services">Services</a>
+<a data-nav="resources" href="#resources">Resources</a>
+</nav>
+</div>
+</header>
+
+  <!-- =====================
+       App Shell
+       Each "page" is a section. Hash routing swaps visibility.
+       ===================== -->
+  <main id="appMain">
+    <section data-route="home">
+      
+<!-- Hero -->
+<section aria-label="Hero" class="hero">
+<img alt="Warehouse with tools and supplies" class="hero-bg" data-parallax="" src="assets/images/2ff8239c95d1e81473e740e3f1e63b86e9f4fd67.png"/>
+<div aria-hidden="true" class="overlay"></div>
+<div class="container content">
+<div style="max-width: 44rem;">
+<h1>Simplifying your business procurement needs </h1>
+<p class="p-lg" style="max-width: 34rem; color: rgba(255,255,255,.9); margin: 16px 0 0;">A modern B2B marketplace experience for procurement managers.</p>
+</div>
+</div>
+</section>
+<!-- Welcome -->
+<section class="section sm" style="background: linear-gradient(135deg, rgba(220,38,38,.06), #fff); border-bottom: 1px solid var(--line);">
+<div class="container">
+<a href="dashboard.html" style="display:block">
+<div class="card hover" style="padding: 28px;">
+<div class="grid" style="grid-template-columns: 1fr; align-items:start; gap: 24px;">
+<div style="display:flex; gap: 24px; align-items:flex-start; flex-wrap: wrap;">
+<div style="width:128px; height:128px; border-radius:999px; overflow:hidden; border:4px solid var(--red); flex:0 0 auto;">
+<img alt="Henry Ford" src="assets/images/25edcccbd30668c43241acb53e6e6ee718537770.png" style="width:100%; height:100%; object-fit:cover; object-position: 50% 10%; transform: scale(1.18);"/>
+</div>
+<div style="flex:1; min-width: 260px;">
+<div style="display:flex; align-items:flex-start; justify-content:space-between; gap: 16px; flex-wrap: wrap;">
+<div>
+<h2 style="font-size: 1.9rem;">Welcome, Henry Ford</h2>
+<p class="p" style="margin:6px 0 0;">Procurement Manager, Auto Garage (BC, Canada)</p>
+</div>
+<span class="btn btn-primary" style="height:40px;">Dashboard
+                      <svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+<div class="grid" style="grid-template-columns: repeat(1, 1fr); gap: 16px; margin-top: 18px;">
+<div style="display:flex; gap: 12px; align-items:flex-start;">
+<div style="width:40px; height:40px; border-radius: 12px; background: rgba(220,38,38,.1); display:flex; align-items:center; justify-content:center; flex:0 0 auto;">
+<svg aria-hidden="true" fill="none" height="18" viewbox="0 0 24 24" width="18"><path d="M8 7V3m8 4V3M4 11h16M6 5h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2z" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div style="font-size:12px; color: var(--muted2)">Account Created</div>
+<div style="font-weight:800;">January 15, 2024</div>
+</div>
+</div>
+<div style="display:flex; gap: 12px; align-items:flex-start;">
+<div style="width:40px; height:40px; border-radius: 12px; background: rgba(17,24,39,.06); display:flex; align-items:center; justify-content:center; flex:0 0 auto;">
+<svg aria-hidden="true" fill="none" height="18" viewbox="0 0 24 24" width="18"><path d="M12 1v22M17 5H9a4 4 0 000 8h6a4 4 0 010 8H6" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div style="font-size:12px; color: var(--muted2)">Total Spend</div>
+<div style="font-weight:900; font-size: 1.1rem;">$23,026.00</div>
+</div>
+</div>
+<div style="display:flex; gap: 12px; align-items:flex-start;">
+<div style="width:40px; height:40px; border-radius: 12px; background: rgba(251,191,36,.24); display:flex; align-items:center; justify-content:center; flex:0 0 auto;">
+<svg aria-hidden="true" fill="none" height="18" viewbox="0 0 24 24" width="18"><path d="M12 2l2.09 6.26L21 9.27l-5 3.64L17.18 20 12 16.77 6.82 20 8 12.91l-5-3.64 6.91-1.01L12 2z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div style="font-size:12px; color: var(--muted2)">Membership Level</div>
+<div style="display:flex; align-items:center; gap:10px;">
+<div style="font-weight:800;">Platinum</div>
+<span class="badge dark">Elite</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</a>
+</div>
+</section>
+<!-- Spend & Savings -->
+<section class="section sm">
+<div class="container">
+<div class="card" style="padding: 26px;">
+<div style="display:flex; align-items:flex-start; justify-content:space-between; gap: 18px; flex-wrap: wrap;">
+<div>
+<div style="font-weight:800; margin-bottom: 10px;">Spend &amp; Savings</div>
+<div style="font-weight:900; font-size: 1.4rem;">Current spend: $23,378.87</div>
+<div style="margin-top: 4px; font-size: 13px; color: var(--muted2);">over 36 months</div>
+</div>
+<div aria-hidden="true" style="opacity:.55;">
+<svg fill="none" height="44" viewbox="0 0 24 24" width="44"><path d="M3 17l6-6 4 4 8-8" stroke="#111827" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M14 7h7v7" stroke="#111827" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<div class="chart-wrap" style="height:220px; margin-top: 8px;">
+<canvas aria-label="Spend over time line chart" id="spendChart" role="img"></canvas>
+<!-- <svg class="chart-svg" data-spend-chart data-compact="1" viewBox="0 0 800 320" role="img" aria-label="Spend over time line chart"></svg> -->
+</div>
+</div>
+</div>
+</section>
+<!-- Categories -->
+<section class="section sm">
+<div class="container">
+<div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 16px;">
+<a class="card hover" href="products.html" style="padding: 18px;">
+<div style="font-weight:900;">Safety</div>
+<div class="p" style="font-size:12px; margin-top:6px;">Lorem ipsum dolor consectetuer elit orlis.</div>
+</a>
+<a class="card hover" href="products.html" style="padding: 18px;">
+<div style="font-weight:900;">Tools</div>
+<div class="p" style="font-size:12px; margin-top:6px;">Lorem ipsum dolor consectetuer elit.</div>
+</a>
+<a class="card hover" href="products.html" style="padding: 18px;">
+<div style="font-weight:900;">Electrical</div>
+<div class="p" style="font-size:12px; margin-top:6px;">Quant pellentesque elementum</div>
+</a>
+<a class="card hover" href="products.html" style="padding: 18px;">
+<div style="font-weight:900;">Fasteners</div>
+<div class="p" style="font-size:12px; margin-top:6px;">Lorem ipsum consectetuer pellentesque monacule</div>
+</a>
+<a class="card hover" href="products.html" style="padding: 18px; grid-column: span 2;">
+<div style="font-weight:900;">Plumbing</div>
+<div class="p" style="font-size:12px; margin-top:6px;">Loremquanti consequent te conseque</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Hot Deals + Clearance -->
+<section class="section sm bg2">
+<div class="container">
+<div class="grid deals-grid">
+<div class="card" style="padding: 28px; color:#fff; border:none; background: linear-gradient(135deg, var(--red), #991b1b);">
+<div style="display:flex; align-items:center; gap: 14px;">
+<h2 style="font-size: 2rem;">Hot Deals</h2>
+<div style="width:56px; height:56px; border-radius:999px; background: rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
+<svg aria-hidden="true" fill="none" height="28" viewbox="0 0 24 24" width="28"><path d="M12 2s4 4 4 8a4 4 0 11-8 0c0-3 2-6 4-8z" fill="white"></path><path d="M6 14a6 6 0 0012 0" stroke="white" stroke-linecap="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<p style="margin: 10px 0 18px; color: rgba(255,255,255,.9)">Save on core tools this season</p>
+<a class="btn btn-inverse" href="products.html"><i aria-hidden="true" data-lucide="arrow-right"></i>Save now</a>
+</div>
+<div class="card" style="padding: 28px; color:#fff; border:none; background: linear-gradient(135deg, #374151, #111827);">
+<div style="display:flex; align-items:center; gap: 14px;">
+<h2 style="font-size: 2rem;">Clearance</h2>
+<div style="width:56px; height:56px; border-radius:999px; background: rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
+<svg aria-hidden="true" fill="none" height="28" viewbox="0 0 24 24" width="28"><path d="M14 14.76V3.5a2.5 2.5 0 10-5 0v11.26a4.5 4.5 0 105 0z" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+<p style="margin: 10px 0 18px; color: rgba(255,255,255,.9)">Limited-time markdowns across categories</p>
+<a class="btn btn-inverse" href="products.html"><i aria-hidden="true" data-lucide="arrow-right"></i>Browse sale</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Products (recently purchased) -->
+<section class="section sm">
+<div class="container">
+<div class="card" style="padding: 28px; background: var(--bg2);">
+<div style="display:flex; align-items:center; justify-content:space-between; gap: 16px;">
+<div style="display:flex; align-items:center; gap: 10px;">
+<div aria-hidden="true" style="width:22px; height:22px; border-radius:999px; background: rgba(17,24,39,.08);"></div>
+<div style="font-weight:800;">Recently purchased products</div>
+</div>
+<a aria-label="View more" class="btn btn-ghost" href="products.html">
+<svg aria-hidden="true" fill="none" height="20" viewbox="0 0 24 24" width="20"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+<div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 18px;">
+<!-- 4 featured cards -->
+<div class="prod" style="transition: transform .25s ease;">
+<div class="thumb"><img alt="20V Cordless Drill Kit" src="https://images.unsplash.com/photo-1720156066527-41497702fc63?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+<span class="tag">Power Tools</span><span class="tag">Cordless</span><span class="tag">Best Seller</span>
+</div>
+<div style="font-weight:900;">20V Cordless Drill Kit</div>
+<div class="p" style="font-size:12px; margin:6px 0 8px;">Professional grade cordless drill with variable speed trigger and LED work light for precision</div>
+<div style="font-weight:900; color: var(--red); margin-bottom: 10px;">$149.99</div>
+<button class="btn btn-primary" style="width:100%;">Add to Cart</button>
+</div>
+<div class="prod">
+<div class="thumb"><img alt="Socket Wrench Set 42-Piece" src="https://images.unsplash.com/photo-1581619897692-ebbf1c3883ae?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+<span class="tag">Hand Tools</span><span class="tag">Professional</span><span class="tag">Complete Set</span>
+</div>
+<div style="font-weight:900;">Socket Wrench Set 42-Piece</div>
+<div class="p" style="font-size:12px; margin:6px 0 8px;">Complete mechanics tool set with chrome vanadium steel construction and organized carrying case</div>
+<div style="font-weight:900; color: var(--red); margin-bottom: 10px;">$89.99</div>
+<button class="btn btn-primary" style="width:100%;">Add to Cart</button>
+</div>
+<div class="prod">
+<div class="thumb"><img alt="7.25 inch Circular Saw" src="https://images.unsplash.com/photo-1767389193137-77d6f9b8b56a?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+<span class="tag">Power Tools</span><span class="tag">Cutting</span><span class="tag">Professional</span>
+</div>
+<div style="font-weight:900;">7.25" Circular Saw</div>
+<div class="p" style="font-size:12px; margin:6px 0 8px;">Powerful circular saw with laser guide system and dust blower for accurate cuts in various materials</div>
+<div style="font-weight:900; color: var(--red); margin-bottom: 10px;">$199.99</div>
+<button class="btn btn-primary" style="width:100%;">Add to Cart</button>
+</div>
+<div class="prod">
+<div class="thumb"><img alt="Rolling Tool Chest" src="https://images.unsplash.com/photo-1620825141088-a824daf6a46b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+<span class="tag">Storage</span><span class="tag">Organization</span><span class="tag">Heavy Duty</span>
+</div>
+<div style="font-weight:900;">Rolling Tool Chest</div>
+<div class="p" style="font-size:12px; margin:6px 0 8px;">Heavy-duty tool storage with 8 drawers, ball-bearing slides, and mobile design for workshop organization</div>
+<div style="font-weight:900; color: var(--red); margin-bottom: 10px;">$299.99</div>
+<button class="btn btn-primary" style="width:100%;">Add to Cart</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended Products carousel -->
+<section aria-label="Recommended products" class="section bg2">
+<div class="container" data-carousel="">
+<h2 style="margin-bottom: 18px;">Recommended products based on your recently purchased products</h2>
+<div style="position:relative;">
+<button aria-label="Scroll left" class="btn btn-icon" data-left="" style="position:absolute; left:-12px; top:50%; transform: translateY(-50%); z-index:2; box-shadow: var(--shadow);">
+<svg fill="none" height="22" viewbox="0 0 24 24" width="22"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button aria-label="Scroll right" class="btn btn-icon" data-right="" style="position:absolute; right:-12px; top:50%; transform: translateY(-50%); z-index:2; box-shadow: var(--shadow);">
+<svg fill="none" height="22" viewbox="0 0 24 24" width="22"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<div class="hscroll" role="list">
+<!-- 10 tiles -->
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Industrial Air Compressor" src="https://images.unsplash.com/photo-1683119926853-6427b2966f9d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Industrial Air Compressor</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$449.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Hydraulic Floor Jack" src="https://images.unsplash.com/photo-1549047608-55b2fd4b8427?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Hydraulic Floor Jack 3-Ton</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$179.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="LED Work Light" src="https://images.unsplash.com/photo-1764275918132-02d4b0452d67?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">LED Work Light Set 4-Pack</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$64.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Professional Welding Kit" src="https://images.unsplash.com/photo-1707064892275-a3088e8240be?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Professional Welding Kit</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$329.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Digital Torque Wrench" src="https://images.unsplash.com/photo-1581166418878-11f0dde922c2?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Digital Torque Wrench Set</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$159.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Pneumatic Impact Wrench" src="https://images.unsplash.com/photo-1694796022892-c032328a2c0d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Pneumatic Impact Wrench</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$219.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Battery Charger" src="https://images.unsplash.com/photo-1673337188103-c196140adebd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Battery Charger 12V/24V</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$129.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Mechanic Tool Set" src="https://images.unsplash.com/photo-1657776655487-18dcab7b2c65?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Mechanic Tool Set 220-Pc</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$389.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Diagnostic Scanner" src="https://images.unsplash.com/photo-1645575205773-6514860cd97d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Diagnostic Scanner OBD2</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$249.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+<div class="tile prod" role="listitem" style="width: 170px;">
+<div class="thumb" style="width:80px; margin:0 auto 10px;"><img alt="Engine Lift Crane" src="https://images.unsplash.com/photo-1738676455943-1ceba4d60ac1?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400"/></div>
+<div style="font-weight:800; text-align:center; font-size: 14px;">Engine Lift Crane 2-Ton</div>
+<div style="font-weight:900; color: var(--red); text-align:center; margin: 8px 0 10px;">$599.99</div>
+<button class="btn btn-primary" style="width:100%; height:36px;">+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Supplier Partners -->
+<section aria-label="Supplier partners" class="section">
+<div class="container">
+<h2 style="margin-bottom: 18px;">Featured Supplier Partners</h2>
+<div class="grid deals-grid">
+<div class="grid deals-grid">
+<div class="card" style="padding: 18px;">
+<h3 style="font-weight:900; margin-bottom: 8px;">Approved Supplier</h3>
+<p class="p" style="font-size: 13px;">Lorem ipsum dolor sites lorem consectetuer lorem magna officia</p>
+</div>
+<div class="card" style="padding: 18px;">
+<h3 style="font-weight:900; margin-bottom: 8px;">Read the blog</h3>
+<p class="p" style="font-size: 13px;">Lorem ipsum dolor interid setes consectetuer or maximus sit deus</p>
+</div>
+<div class="card" style="padding: 18px;">
+<h3 style="font-weight:900; margin-bottom: 8px;">Procurement tools</h3>
+<p class="p" style="font-size: 13px;">Lorem ipsum dolor sit elit lorem magna officia best maximus nulla</p>
+</div>
+</div>
+<div class="card" style="padding: 22px; background: var(--bg2);">
+<div style="display:grid; gap: 10px;">
+<div style="display:flex; align-items:center; justify-content:space-between; padding: 12px 0; border-bottom:1px solid var(--line);">
+<div style="display:flex; gap: 10px; align-items:center;">
+<span style="width:10px; height:10px; border-radius:999px; background: rgba(17,24,39,.25);"></span>
+<span style="font-weight:800;">Wiesling Repair Offices</span>
+</div>
+<span style="color: var(--muted); font-size: 13px;">DERAMax</span>
+</div>
+<div style="display:flex; align-items:center; justify-content:space-between; padding: 12px 0; border-bottom:1px solid var(--line);">
+<div style="display:flex; gap: 10px; align-items:center;">
+<span style="width:10px; height:10px; border-radius:999px; background: rgba(17,24,39,.25);"></span>
+<span style="font-weight:800;">Hillporc Offices Communitis</span>
+</div>
+<span style="color: var(--muted); font-size: 13px;">DERAMax</span>
+</div>
+<div style="display:flex; align-items:center; justify-content:space-between; padding: 12px 0; border-bottom:1px solid var(--line);">
+<div style="display:flex; gap: 10px; align-items:center;">
+<span style="width:10px; height:10px; border-radius:999px; background: rgba(17,24,39,.25);"></span>
+<span style="font-weight:800;">Hillasy Card Hardware</span>
+</div>
+<span style="color: var(--muted); font-size: 13px;">DERAMax</span>
+</div>
+<div style="display:flex; align-items:center; justify-content:space-between; padding: 12px 0;">
+<div style="display:flex; gap: 10px; align-items:center;">
+<span style="width:10px; height:10px; border-radius:999px; background: rgba(17,24,39,.25);"></span>
+<span style="font-weight:800;">Discented Exclusive Commune</span>
+</div>
+<span style="color: var(--muted); font-size: 13px;">LOAD</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Customer stories -->
+<section aria-label="Customer stories" class="section bg2">
+<div class="container">
+<div style="display:flex; align-items:center; justify-content:space-between; gap: 14px; margin-bottom: 18px;">
+<h2>Customer stories</h2>
+<a aria-label="View stories" class="btn btn-ghost" href="resources.html">
+<svg fill="none" height="20" viewbox="0 0 24 24" width="20"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+<div class="card" style="padding: 26px;">
+<div class="grid" style="grid-template-columns: 1fr; gap: 18px; align-items:start;">
+<img alt="Customer" src="https://images.unsplash.com/photo-1758691737644-ef8be18256c3?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=400" style="width:128px; height:128px; border-radius: 16px; object-fit:cover;"/>
+<div>
+<p style="font-size: 1.05rem; margin: 0 0 12px;">“Working with the B2B marketplace has helped us reduce emergency purchases and standardize our parts program.”</p>
+<div style="font-weight:900;">Amanda U.</div>
+<div style="color: var(--muted); font-size: 13px;">Astrologer Airbourne Commercial</div>
+<div style="margin-top: 14px;">
+<a class="btn btn-outline" href="resources.html">Read all stories
+                  <svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+    </section>
+
+    <section data-route="products" hidden>
+      
+<div class="container">
+<div class="page-head">
+<h1 style="font-size: 2.2rem;">Product Catalog</h1>
+<p class="p" style="margin:10px 0 0;">Browse our extensive inventory of industrial supplies and equipment.</p>
+</div>
+<div class="product-layout" style="padding-bottom: 64px;">
+<!-- Filters -->
+<aside aria-label="Filters" class="card filter-card">
+<div style="display:flex; gap:12px; align-items:center;">
+<div style="width:40px; height:40px; border-radius:12px; background: rgba(220,38,38,.10); display:flex; align-items:center; justify-content:center;">
+<svg fill="none" height="18" viewbox="0 0 24 24" width="18"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div style="font-weight:900;">Filters</div>
+<div style="font-size: 12px; color: var(--muted2);">Refine your search</div>
+</div>
+</div>
+<div class="filter-group">
+<div class="filter-title">Category</div>
+<label class="check"><input checked="" type="checkbox"/> Tools</label>
+<label class="check"><input type="checkbox"/> Safety</label>
+<label class="check"><input type="checkbox"/> Automotive</label>
+<label class="check"><input type="checkbox"/> Electrical</label>
+<label class="check"><input type="checkbox"/> Plumbing</label>
+</div>
+<div class="filter-group">
+<div class="filter-title">Brand</div>
+<label class="check"><input checked="" type="checkbox"/> DeWalt</label>
+<label class="check"><input type="checkbox"/> Milwaukee</label>
+<label class="check"><input type="checkbox"/> Bosch</label>
+<label class="check"><input type="checkbox"/> 3M</label>
+<label class="check"><input type="checkbox"/> Stanley</label>
+</div>
+<div class="filter-group">
+<div class="filter-title">Price Range</div>
+<label class="check"><input type="checkbox"/> Under $50</label>
+<label class="check"><input checked="" type="checkbox"/> $50 - $200</label>
+<label class="check"><input type="checkbox"/> $200 - $500</label>
+<label class="check"><input type="checkbox"/> Over $500</label>
+</div>
+<button class="btn" style="width:100%; margin-top: 16px;">Clear Filters</button>
+</aside>
+<!-- Products -->
+<section>
+<div class="card" id="savedViewBanner" style="display:none; padding:12px 14px; margin-bottom:14px; border-left:4px solid var(--red);"></div>
+<div style="display:flex; flex-wrap: wrap; align-items:center; justify-content:space-between; gap: 12px; margin-bottom: 16px;">
+<div>
+<div style="font-weight:900;">Showing 24 products</div>
+<div style="font-size: 13px; color: var(--muted2);">Sorted by relevance</div>
+</div>
+<div style="display:flex; gap: 10px; align-items:center;">
+<select aria-label="Saved views" class="input" data-savedview="" style="width: 220px;"><option value="">Saved view: —</option><option value="essentials">Branch essentials</option><option value="approved">Approved suppliers only</option><option value="contract">Contract items</option></select>
+<select aria-label="Sort" class="input" style="width: 200px;">
+<option>Sort: Featured</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Best Rated</option>
+</select>
+<button class="btn btn-primary" data-open-cart="" type="button">View Cart</button>
+</div>
+</div>
+<div class="product-grid">
+<!-- 12 sample products (match TSX list) -->
+<div class="prod" data-brand="DeWalt" data-id="DW-2039" data-name="DeWalt Cordless Drill" data-price="149.99" data-sku="DW-2039">
+<div class="thumb"><img alt="DeWalt Cordless Drill" src="https://images.unsplash.com/photo-1720156066527-41497702fc63?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">DeWalt Cordless Drill</div>
+<div style="font-size: 12px; color: var(--muted2);">20V Max XR • SKU: DW-2039</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$149.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="3M" data-id="SG-1024" data-name="Safety Glasses Pack" data-price="24.99" data-sku="SG-1024">
+<div class="thumb"><img alt="Safety Glasses Pack" src="https://images.unsplash.com/photo-1739159114611-da41a205405e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Safety Glasses Pack</div>
+<div style="font-size: 12px; color: var(--muted2);">Anti-fog • SKU: SG-1024</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$24.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="Stanley" data-id="WG-5532" data-name="Industrial Work Gloves" data-price="18.99" data-sku="WG-5532">
+<div class="thumb"><img alt="Industrial Work Gloves" src="https://images.unsplash.com/photo-1616849897528-86e4d6d89b0a?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Industrial Work Gloves</div>
+<div style="font-size: 12px; color: var(--muted2);">Cut Resistant • SKU: WG-5532</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$18.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="DeWalt" data-id="HJ-3001" data-name="Hydraulic Floor Jack" data-price="179.99" data-sku="HJ-3001">
+<div class="thumb"><img alt="Hydraulic Floor Jack" src="https://images.unsplash.com/photo-1549047608-55b2fd4b8427?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Hydraulic Floor Jack</div>
+<div style="font-size: 12px; color: var(--muted2);">3-Ton • SKU: HJ-3001</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$179.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="Stanley" data-id="MT-220" data-name="Mechanic Tool Set 220-Pc" data-price="389.99" data-sku="MT-220">
+<div class="thumb"><img alt="Mechanic Tool Set" src="https://images.unsplash.com/photo-1657776655487-18dcab7b2c65?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Mechanic Tool Set 220-Pc</div>
+<div style="font-size: 12px; color: var(--muted2);">Chrome Vanadium • SKU: MT-220</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$389.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="DeWalt" data-id="AC-450" data-name="Industrial Air Compressor" data-price="449.99" data-sku="AC-450">
+<div class="thumb"><img alt="Industrial Air Compressor" src="https://images.unsplash.com/photo-1683119926853-6427b2966f9d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Industrial Air Compressor</div>
+<div style="font-size: 12px; color: var(--muted2);">Shop Grade • SKU: AC-450</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$449.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="Bosch" data-id="DS-OBD2" data-name="Diagnostic Scanner OBD2" data-price="249.99" data-sku="DS-OBD2">
+<div class="thumb"><img alt="Diagnostic Scanner" src="https://images.unsplash.com/photo-1645575205773-6514860cd97d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Diagnostic Scanner OBD2</div>
+<div style="font-size: 12px; color: var(--muted2);">Multi-Brand • SKU: DS-OBD2</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$249.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="DeWalt" data-id="WK-900" data-name="Professional Welding Kit" data-price="329.99" data-sku="WK-900">
+<div class="thumb"><img alt="Professional Welding Kit" src="https://images.unsplash.com/photo-1707064892275-a3088e8240be?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Professional Welding Kit</div>
+<div style="font-size: 12px; color: var(--muted2);">MIG Ready • SKU: WK-900</div>
+</div>
+<span class="badge" style="color: #6b7280;">Limited</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$329.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="Bosch" data-id="TW-120" data-name="Digital Torque Wrench" data-price="159.99" data-sku="TW-120">
+<div class="thumb"><img alt="Digital Torque Wrench" src="https://images.unsplash.com/photo-1581166418878-11f0dde922c2?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Digital Torque Wrench</div>
+<div style="font-size: 12px; color: var(--muted2);">Precision • SKU: TW-120</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$159.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="Stanley" data-id="EL-2T" data-name="Engine Lift Crane 2-Ton" data-price="499.99" data-sku="EL-2T">
+<div class="thumb"><img alt="Engine Lift Crane" src="https://images.unsplash.com/photo-1738676455943-1ceba4d60ac1?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Engine Lift Crane 2-Ton</div>
+<div style="font-size: 12px; color: var(--muted2);">Shop Equipment • SKU: EL-2T</div>
+</div>
+<span class="badge" style="color: #6b7280;">Backorder</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$599.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="3M" data-id="BR-610" data-name="Brake Cleaner 12-Pack" data-price="69.99" data-sku="BR-610">
+<div class="thumb"><img alt="LED Work Light" src="https://images.unsplash.com/photo-1764275918132-02d4b0452d67?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">LED Work Light Set</div>
+<div style="font-size: 12px; color: var(--muted2);">4-Pack • SKU: WL-4PK</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$64.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+<div class="prod" data-brand="3M" data-id="SF-301" data-name="Shop Floor Degreaser" data-price="39.99" data-sku="SF-301">
+<div class="thumb"><img alt="Battery Charger" src="https://images.unsplash.com/photo-1673337188103-c196140adebd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;w=800"/></div>
+<div style="display:flex; justify-content:space-between; gap: 10px; align-items:flex-start;">
+<div>
+<div style="font-weight:900;">Battery Charger 12V/24V</div>
+<div style="font-size: 12px; color: var(--muted2);">Smart Charge • SKU: BC-1224</div>
+</div>
+<span class="badge" style="color: var(--red); border-color: rgba(220,38,38,.35);">In Stock</span>
+</div>
+<div style="font-weight:900; color: var(--red); margin-top: 10px;">$129.99</div>
+<button class="btn btn-primary" data-add="" style="width:100%; margin-top: 12px;">Add to Cart</button>
+</div>
+</div>
+<div style="display:flex; gap: 10px; justify-content:center; margin-top: 22px;">
+<button class="btn">Previous</button>
+<button class="btn btn-primary">1</button>
+<button class="btn">2</button>
+<button class="btn">3</button>
+<button class="btn">Next</button>
+</div>
+</section>
+</div>
+</div>
+
+    </section>
+
+    <section data-route="dashboard" hidden>
+      
+<div class="container">
+<!-- Page header -->
+<div class="dash-head">
+<div>
+<h1 class="h1">Dashboard</h1>
+<p class="p">Multi-branch procurement overview for <strong>Auto Garage</strong> (BC-led, some AB, light rest of Canada).</p>
+</div>
+<div class="dash-actions">
+<button class="btn btn-primary" id="createPOBtn" type="button"><i aria-hidden="true" data-lucide="file-plus"></i>Create Purchase Order</button>
+<button class="btn" data-open-cart="" type="button"><i aria-hidden="true" data-lucide="shopping-cart"></i>Open Cart</button>
+<button class="btn btn-outline" id="exportBtn" type="button"><i aria-hidden="true" data-lucide="download"></i>Export Report</button>
+</div>
+</div>
+<!-- Profile / account summary (Figma style) -->
+<section aria-label="Account summary" class="section sm">
+<div class="card dash-profile" data-reveal="">
+<div class="dash-profile-left">
+<img alt="Henry Ford" class="dash-avatar" src="assets/images/25edcccbd30668c43241acb53e6e6ee718537770.png"/>
+<div>
+<div class="dash-name">Henry Ford</div>
+<div class="dash-role">Procurement Manager, Auto Garage (Canada)</div>
+</div>
+</div>
+<div class="dash-profile-metrics">
+<div class="dash-metric">
+<div class="dash-metric-ic"><i aria-hidden="true" data-lucide="calendar"></i></div>
+<div>
+<div class="mini">Account created</div>
+<div class="dash-metric-val">Jan 15, 2024</div>
+</div>
+</div>
+<div class="dash-metric">
+<div class="dash-metric-ic" style="background: rgba(236,32,40,.10); color: var(--red);"><i aria-hidden="true" data-lucide="dollar-sign"></i></div>
+<div>
+<div class="mini">Total spend</div>
+<div class="dash-metric-val">$23,026.00</div>
+</div>
+</div>
+<div class="dash-metric">
+<div class="dash-metric-ic"><i aria-hidden="true" data-lucide="badge-check"></i></div>
+<div>
+<div class="mini">Membership level</div>
+<div class="dash-metric-val">Platinum <span class="badge" style="margin-left:8px;">Elite</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- KPI tiles (4) -->
+<section aria-label="Key metrics" class="section sm" style="padding-top: 4px;">
+<div class="grid kpi-grid">
+<div class="card kpi" data-reveal="">
+<div class="kpi-ic"><i aria-hidden="true" data-lucide="shopping-bag"></i></div>
+<div class="kpi-val">142</div>
+<div class="mini">Total orders</div>
+</div>
+<div class="card kpi" data-reveal="">
+<div class="kpi-ic" style="background: rgba(236,32,40,.10); color: var(--red);"><i aria-hidden="true" data-lucide="package"></i></div>
+<div class="kpi-val">8</div>
+<div class="mini">Active orders</div>
+</div>
+<div class="card kpi" data-reveal="">
+<div class="kpi-ic" style="background: rgba(251,191,36,.22);"><i aria-hidden="true" data-lucide="clock-3"></i></div>
+<div class="kpi-val">3.2 days</div>
+<div class="mini">Avg. delivery time</div>
+</div>
+<div class="card kpi" data-reveal="">
+<div class="kpi-ic"><i aria-hidden="true" data-lucide="users"></i></div>
+<div class="kpi-val">12</div>
+<div class="mini">Approved suppliers</div>
+</div>
+</div>
+</section>
+<!-- Tabs -->
+<section class="section sm" data-tabs="" style="padding-top: 8px;">
+<div aria-label="Dashboard tabs" class="tabs" role="tablist">
+<button aria-selected="true" class="tab" role="tab" tabindex="0">Overview</button>
+<button aria-selected="false" class="tab" role="tab" tabindex="-1">Intelligence Hub</button>
+<button aria-selected="false" class="tab" role="tab" tabindex="-1">Approvals</button>
+<button aria-selected="false" class="tab" role="tab" tabindex="-1">Policies</button>
+<button aria-selected="false" class="tab" role="tab" tabindex="-1">Purchase Orders</button>
+</div>
+<div class="tabpanes" style="margin-top: 14px;">
+<!-- Overview -->
+<div class="tabpane is-active" role="tabpanel">
+<div class="grid dash-overview-grid">
+<!-- Spend & Savings -->
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Spend &amp; savings</div>
+<h3 class="h3">Current spend: <span class="num">$23,378.87</span></h3>
+<div class="mini">Benchmark lines show budget cap and target savings.</div>
+</div>
+<div class="dash-right">
+<div aria-label="Time range" class="segmented" role="group">
+<button class="seg is-active" data-range="12" type="button">12m</button>
+<button class="seg" data-range="24" type="button">24m</button>
+<button class="seg" data-range="36" type="button">36m</button>
+</div>
+<div class="badge-row">
+<span class="badge">Budget: $40K/mo</span>
+<span class="badge" style="border-color: rgba(236,32,40,.35); color: var(--red);">Target: $35K</span>
+</div>
+</div>
+</div>
+<div class="chart-box">
+<canvas aria-label="Spend over time with budget and target benchmarks" id="spendChart" role="img"></canvas>
+</div>
+</div>
+<!-- Category spend + Approvals -->
+<div class="grid dash-split">
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Category mix</div>
+<h3 class="h3">Spend by category</h3>
+<div class="mini">Automotive dominates, with tools and safety supporting.</div>
+</div>
+</div>
+<div class="chart-box small">
+<canvas aria-label="Category spend chart" id="categoryChart" role="img"></canvas>
+</div>
+<div class="mini" style="margin-top: 10px;">Top: Automotive (62%) • Tools (18%) • Safety (10%)</div>
+</div>
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Workflow health</div>
+<h3 class="h3">Approval pipeline</h3>
+<div class="mini">Where requests are currently waiting.</div>
+</div>
+<span class="badge">5 pending</span>
+</div>
+<div class="chart-box small">
+<canvas aria-label="Approval pipeline chart" id="approvalChart" role="img"></canvas>
+</div>
+<div class="mini" style="margin-top: 10px;">Tip: keep high-value orders moving by pre‑approving common SKUs.</div>
+</div>
+</div>
+<!-- Branch heatmap -->
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Multi‑branch view</div>
+<h3 class="h3">Branch demand heatmap</h3>
+<div class="mini">BC heavy, AB medium, light rest of Canada.</div>
+</div>
+<span class="badge">Last 30 days</span>
+</div>
+<div aria-label="Heatmap of branch demand intensity" class="heatmap" role="img">
+<div class="heat-row">
+<div class="heat-label">BC</div>
+<div class="heat-cells">
+<span class="heat c5" title="Vancouver"></span>
+<span class="heat c4" title="Surrey"></span>
+<span class="heat c4" title="Richmond"></span>
+<span class="heat c3" title="Kelowna"></span>
+</div>
+<div class="heat-note">~72% of demand</div>
+</div>
+<div class="heat-row">
+<div class="heat-label">AB</div>
+<div class="heat-cells">
+<span class="heat c3" title="Calgary"></span>
+<span class="heat c3" title="Edmonton"></span>
+<span class="heat c2" title="Red Deer"></span>
+<span class="heat c2" title="Lethbridge"></span>
+</div>
+<div class="heat-note">~22% of demand</div>
+</div>
+<div class="heat-row">
+<div class="heat-label">Rest</div>
+<div class="heat-cells">
+<span class="heat c1" title="ON"></span>
+<span class="heat c1" title="QC"></span>
+<span class="heat c1" title="SK"></span>
+<span class="heat c1" title="MB"></span>
+</div>
+<div class="heat-note">~6% of demand</div>
+</div>
+</div>
+</div>
+<!-- Activity timeline -->
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Recent activity</div>
+<h3 class="h3">Timeline</h3>
+<div class="mini">Filter by branch and activity type.</div>
+</div>
+<div class="dash-filters">
+<label class="sr-only" for="filterBranch">Branch</label>
+<select class="input" id="filterBranch">
+<option>All</option>
+<option>Vancouver, BC</option>
+<option>Surrey, BC</option>
+<option>Calgary, AB</option>
+<option>Edmonton, AB</option>
+</select>
+<label class="sr-only" for="filterType">Type</label>
+<select class="input" id="filterType">
+<option>All</option>
+<option>PO</option>
+<option>Inventory</option>
+<option>Savings</option>
+<option>Policy</option>
+</select>
+</div>
+</div>
+<div aria-live="polite" class="timeline" id="timeline"></div>
+</div>
+</div>
+</div>
+<!-- Intelligence Hub -->
+<div class="tabpane" role="tabpanel">
+<div class="grid dash-overview-grid">
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">AI Executive summary</div>
+<h3 class="h3">Savings identified: <span class="num">$18,420</span></h3>
+<div class="mini">AI recommends consolidation + forecast-driven reorders.</div>
+</div>
+<button class="btn btn-outline" type="button"><i aria-hidden="true" data-lucide="sparkles"></i>Apply AI recommendations</button>
+</div>
+<div class="grid dash-split" style="margin-top: 12px;">
+<div class="card" style="padding:16px; background: var(--bg2);">
+<div class="mini" style="margin-bottom:6px;">Top opportunity</div>
+<div style="font-weight:900;">Consolidate 3 suppliers</div>
+<div class="mini" style="margin-top:6px;">Estimated savings: <strong>$3,200/yr</strong></div>
+<div class="badge-row" style="margin-top:10px;">
+<span class="badge">Brake pads</span>
+<span class="badge">Tools</span>
+<span class="badge">MRO</span>
+</div>
+</div>
+<div class="card" style="padding:16px; background: var(--bg2);">
+<div class="mini" style="margin-bottom:6px;">Risk watch</div>
+<div style="font-weight:900;">Delivery delays flagged</div>
+<div class="mini" style="margin-top:6px;">2 suppliers above 10% delay risk.</div>
+<div class="badge-row" style="margin-top:10px;">
+<span class="badge">O‑Ring Supply</span>
+<span class="badge">Supplier D</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid dash-split">
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">AI breakdown</div>
+<h3 class="h3">Savings by driver</h3>
+<div class="mini">Where savings are coming from.</div>
+</div>
+</div>
+<div class="chart-box small">
+<canvas aria-label="Savings by driver chart" id="savingsChart" role="img"></canvas>
+</div>
+</div>
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Forecast</div>
+<h3 class="h3">Reorder risk forecast</h3>
+<div class="mini">Predictive usage model with reorder threshold.</div>
+</div>
+<span class="badge">Oil filters</span>
+</div>
+<div class="chart-box small">
+<canvas aria-label="Forecast chart with reorder threshold" id="forecastChart" role="img"></canvas>
+</div>
+<div class="mini" style="margin-top: 10px;">Likely run out in <strong>11 days</strong> • Auto‑reorder recommended.</div>
+</div>
+</div>
+<div class="card dash-card" data-reveal="">
+<div class="dash-card-head">
+<div>
+<div class="eyebrow">Natural language</div>
+<h3 class="h3">Ask AI about your procurement</h3>
+<div class="mini">Try: “Reduce tool spend by 10% next quarter.”</div>
+</div>
+</div>
+<div class="ai-bar">
+<i aria-hidden="true" data-lucide="sparkles"></i>
+<input aria-label="Ask AI" class="input" placeholder="Ask AI…" type="text"/>
+<button class="btn btn-primary" type="button"><i aria-hidden="true" data-lucide="arrow-right"></i>Run</button>
+</div>
+<div class="card" style="padding: 14px; margin-top: 14px; background: var(--bg2);">
+<div class="mini">Example result</div>
+<div style="margin-top:6px; font-weight:900;">Plan: consolidate tools + shift to contract pricing</div>
+<ul class="mini" style="margin: 8px 0 0; padding-left: 18px;">
+<li>Move 12% of spend to Supplier A to unlock tier pricing</li>
+<li>Pre-approve top 20 SKUs to reduce approval delays</li>
+<li>Enable auto-reorder for 8 high‑velocity parts</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Approvals / Policies / Purchase Orders -->
+<div class="tabpane" role="tabpanel">
+<div class="card dash-card" data-reveal="" style="padding: 22px;">
+<h3 class="h3">Approvals queue</h3>
+<div class="mini">Review requests routed by policy checks.</div>
+<div id="approvalsList" style="margin-top: 14px;"></div>
+</div>
+</div>
+<div class="tabpane" role="tabpanel">
+<div class="card dash-card" data-reveal="" style="padding: 22px;">
+<h3 class="h3">Budget policies</h3>
+<div class="mini">Rules that determine approval routing and compliance.</div>
+<div class="grid" style="grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; margin-top: 14px;">
+<div class="card" style="padding:16px; background: var(--bg2);">
+<div style="font-weight:900;">Over $5,000</div>
+<div class="mini">Routes to Ops + Finance approval.</div>
+</div>
+<div class="card" style="padding:16px; background: var(--bg2);">
+<div style="font-weight:900;">Non‑approved supplier</div>
+<div class="mini">Requires compliance review.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabpane" role="tabpanel">
+<div class="card dash-card" data-reveal="" style="padding: 22px;">
+<h3 class="h3">Purchase orders</h3>
+<div class="mini">Submitted orders and current status.</div>
+<div id="poList" style="margin-top: 14px;"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+
+    </section>
+
+    <section data-route="resources" hidden>
+      
+<div class="container">
+<div class="page-head">
+<h1 style="font-size: 2.2rem;">Resources &amp; Insights</h1>
+<p class="p" style="margin:10px 0 0; max-width: 70ch;">Guides, case studies, and tools to help you optimize procurement operations.</p>
+</div>
+<section class="grid" style="grid-template-columns: repeat(1, minmax(0,1fr)); gap: 18px;">
+<a class="card hover" href="#" style="padding: 22px;">
+<h3 style="font-weight:900;">Procurement Best Practices Guide</h3>
+<p class="p" style="margin-top: 8px;">Learn strategies to reduce costs and improve supplier relationships.</p>
+<span class="badge" style="margin-top: 12px;">Download PDF</span>
+</a>
+<a class="card hover" href="#" style="padding: 22px;">
+<h3 style="font-weight:900;">Case Study: Manufacturing Cost Reduction</h3>
+<p class="p" style="margin-top: 8px;">How one manufacturer reduced procurement costs by 15%.</p>
+<span class="badge" style="margin-top: 12px;">Read Case Study</span>
+</a>
+<a class="card hover" href="#" style="padding: 22px;">
+<h3 style="font-weight:900;">Supplier Management Toolkit</h3>
+<p class="p" style="margin-top: 8px;">Templates and checklists for effective supplier evaluation.</p>
+<span class="badge" style="margin-top: 12px;">Access Toolkit</span>
+</a>
+<a class="card hover" href="#" style="padding: 22px;">
+<h3 style="font-weight:900;">Webinar: Digital Transformation in Procurement</h3>
+<p class="p" style="margin-top: 8px;">Watch expert insights on modern procurement technology.</p>
+<span class="badge" style="margin-top: 12px;">Watch Now</span>
+</a>
+</section>
+<div class="card" style="padding: 26px; margin-top: 18px; background: linear-gradient(135deg, rgba(220,38,38,.08), #fff);">
+<h2 style="font-size: 1.6rem;">Stay updated</h2>
+<p class="p" style="margin: 10px 0 0;">Subscribe to our newsletter for the latest procurement insights and industry news.</p>
+<div style="display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;">
+<input class="input" placeholder="Enter your email" style="max-width: 360px;" type="email"/>
+<button class="btn btn-primary" type="button">Subscribe</button>
+</div>
+</div>
+</div>
+
+    </section>
+
+    <section data-route="industries" hidden>
+      
+<div class="container">
+<div class="page-head">
+<h1 style="font-size: 2.2rem;">Industries We Serve</h1>
+<p class="p" style="margin:10px 0 0; max-width: 60ch;">Specialized procurement solutions tailored to the unique needs of different industries.</p>
+</div>
+<div class="grid" style="grid-template-columns: repeat(1, minmax(0,1fr)); gap: 18px;">
+<a class="card hover" href="products.html" style="padding: 22px;">
+<h3 style="font-weight:900;">Manufacturing</h3>
+<p class="p" style="margin-top: 8px;">Industrial supplies, safety equipment, and machinery parts.</p>
+</a>
+<a class="card hover" href="products.html" style="padding: 22px;">
+<h3 style="font-weight:900;">Construction</h3>
+<p class="p" style="margin-top: 8px;">Building materials, tools, and job site safety solutions.</p>
+</a>
+<a class="card hover" href="products.html" style="padding: 22px;">
+<h3 style="font-weight:900;">Healthcare</h3>
+<p class="p" style="margin-top: 8px;">Medical supplies, facility maintenance, and PPE equipment.</p>
+</a>
+<a class="card hover" href="products.html" style="padding: 22px;">
+<h3 style="font-weight:900;">Automotive</h3>
+<p class="p" style="margin-top: 8px;">Parts, tools, diagnostics, and shop supply procurement.</p>
+</a>
+<a class="card hover" href="products.html" style="padding: 22px;">
+<h3 style="font-weight:900;">Education</h3>
+<p class="p" style="margin-top: 8px;">Maintenance supplies, technology, and classroom equipment.</p>
+</a>
+<a class="card hover" href="products.html" style="padding: 22px;">
+<h3 style="font-weight:900;">Hospitality</h3>
+<p class="p" style="margin-top: 8px;">Cleaning supplies, facility management, and guest services.</p>
+</a>
+</div>
+<div class="card" style="padding: 26px; margin-top: 18px;">
+<h2 style="font-size: 1.6rem;">Need a custom industry solution?</h2>
+<p class="p" style="margin: 10px 0 0;">Contact our procurement specialists to discuss your specific requirements.</p>
+<div style="margin-top: 14px;"><a class="btn btn-primary" href="services.html">Contact Sales</a></div>
+</div>
+</div>
+
+    </section>
+
+    <section data-route="services" hidden>
+      
+<div class="container">
+<div class="page-head">
+<h1 style="font-size: 2.2rem;">Services &amp; Solutions</h1>
+<p class="p" style="margin:10px 0 0; max-width: 68ch;">Comprehensive support services to streamline your procurement processes and optimize costs.</p>
+</div>
+<div class="grid" style="grid-template-columns: 1fr; gap: 18px;">
+<div class="card" style="padding: 22px;">
+<h3 style="font-weight:900;">Bulk Ordering</h3>
+<p class="p" style="margin-top: 8px;">Volume discounts and streamlined ordering for large quantities.</p>
+<ul style="margin: 10px 0 0; padding-left: 18px; color: var(--muted);">
+<li>Tiered pricing</li>
+<li>Custom quotes</li>
+<li>Dedicated account management</li>
+</ul>
+</div>
+<div class="card" style="padding: 22px;">
+<h3 style="font-weight:900;">Fast Shipping</h3>
+<p class="p" style="margin-top: 8px;">Reliable delivery options to keep your operations running.</p>
+<ul style="margin: 10px 0 0; padding-left: 18px; color: var(--muted);">
+<li>Next-day delivery</li>
+<li>Scheduled deliveries</li>
+<li>Order tracking</li>
+</ul>
+</div>
+<div class="card" style="padding: 22px;">
+<h3 style="font-weight:900;">Account Management</h3>
+<p class="p" style="margin-top: 8px;">Personalized support and procurement consultation.</p>
+<ul style="margin: 10px 0 0; padding-left: 18px; color: var(--muted);">
+<li>Dedicated account manager</li>
+<li>Procurement consulting</li>
+<li>Performance reporting</li>
+</ul>
+</div>
+<div class="card" style="padding: 22px;">
+<h3 style="font-weight:900;">Fleet Services</h3>
+<p class="p" style="margin-top: 8px;">Specialized solutions for fleet maintenance and operations.</p>
+<ul style="margin: 10px 0 0; padding-left: 18px; color: var(--muted);">
+<li>Fleet maintenance supplies</li>
+<li>Vehicle parts procurement</li>
+<li>Service scheduling</li>
+</ul>
+</div>
+</div>
+<div class="card" style="padding: 26px; margin-top: 18px;">
+<h2 style="font-size: 1.6rem;">Ready to optimize your procurement?</h2>
+<p class="p" style="margin: 10px 0 0;">Get started with a consultation to identify savings and standardization opportunities.</p>
+<div style="margin-top: 14px;"><a class="btn btn-primary" href="resources.html">Schedule a Demo</a></div>
+</div>
+</div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="padding: 52px 16px;">
+      <div class="footer-grid">
+        <div>
+          <h3 style="font-weight:900; margin-bottom: 14px;">Company</h3>
+          <div style="display:grid; gap: 10px; font-size: 14px;">
+            <a href="#">About us</a>
+            <a href="#">Careers</a>
+            <a href="#">Investor Relations</a>
+            <a href="#">Locations</a>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-weight:900; margin-bottom: 14px;">Services</h3>
+          <div style="display:grid; gap: 10px; font-size: 14px;">
+            <a href="services.html">Bulk Details</a>
+            <a href="services.html">Shipping Info</a>
+            <a href="services.html">Account Info</a>
+            <a href="services.html">Fleet &amp; Commercial</a>
+            <a href="services.html">Become a Supplier/Partner</a>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-weight:900; margin-bottom: 14px;">Resources</h3>
+          <div style="display:grid; gap: 10px; font-size: 14px;">
+            <a href="resources.html">Support / Eligibility</a>
+            <a href="resources.html">Learning Center</a>
+            <a href="resources.html">Warranty Info</a>
+            <a href="resources.html">Certification</a>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-weight:900; margin-bottom: 14px;">Product</h3>
+          <div style="display:grid; gap: 10px; font-size: 14px;">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="products.html">Catalog</a>
+            <a href="resources.html">Case Studies</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 26px; opacity:.65; font-size: 12px;">© 2026 Triangle Mark + B2B Marketplace (portfolio prototype)</div>
+    </div>
+  </footer>
+
+  <!-- =====================
+       Vendor scripts
+       ===================== -->
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- =====================
+       App scripts (inline for easier iteration)
+       ===================== -->
+  <script>
+
+/* =====================
+   B2B Marketplace Prototype
+   Single-file build (HTML+CSS+JS)
+   - Password gate preserved (PSI)
+   - Hash routing for pages
+   - Charts powered by Chart.js
+   ===================== */
+
+/* Password gate (client-side polite gate; not real security)
+   - Kept compatible with the base index.html you provided.
+*/
+
+(function(){
+  const DEV_BYPASS_PASSWORD = false;
+  const ACCESS_PASSWORD = "PSI";
+
+  const STORAGE_KEY = "b2b_gate_unlocked";
+
+  function qs(sel){return document.querySelector(sel)}
+
+  function unlock(){
+    localStorage.setItem(STORAGE_KEY, "1");
+    const gate = qs(".gate");
+    if (gate) gate.style.display = "none";
+    document.documentElement.classList.remove("is-locked");
+  }
+
+  function lock(){
+    localStorage.removeItem(STORAGE_KEY);
+    const gate = qs(".gate");
+    if (gate) gate.style.display = "grid";
+    document.documentElement.classList.add("is-locked");
+  }
+
+  function ensureGate(){
+    const gate = qs(".gate");
+    if (!gate) return;
+
+    // Wire up
+    const form = qs("#gateForm");
+    const input = qs("#gatePassword");
+    const err = qs("#gateError");
+    const btnLock = qs("#gateLock");
+
+    if (btnLock){
+      btnLock.addEventListener("click", (e)=>{e.preventDefault(); lock();});
+    }
+
+    if (form){
+      form.addEventListener("submit", (e)=>{
+        e.preventDefault();
+        const entered = (input?.value || "").trim();
+        if (entered === ACCESS_PASSWORD){
+          if (err) err.style.display = "none";
+          unlock();
+          input.value = "";
+        } else {
+          if (err) err.style.display = "block";
+          if (input){ input.focus(); input.select(); }
+        }
+      });
+    }
+
+    const unlocked = DEV_BYPASS_PASSWORD || localStorage.getItem(STORAGE_KEY) === "1";
+    if (unlocked) {
+      gate.style.display = "none";
+    } else {
+      gate.style.display = "grid";
+      setTimeout(()=>{ input?.focus(); }, 50);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", ensureGate);
+})();
+
+
+
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Motion: reveals ----------
+  function initReveals(){
+    const els = document.querySelectorAll('[data-reveal]');
+    if (!els.length) return;
+    if (reduceMotion){
+      els.forEach(el=>el.classList.add('is-in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if (e.isIntersecting){
+          e.target.classList.add('is-in');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.12});
+    els.forEach(el=>{
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+  }
+
+  // ---------- Parallax ----------
+  function initParallax(){
+    const heroBg = document.querySelector('[data-parallax]');
+    if (!heroBg || reduceMotion) return;
+    const onScroll = ()=>{
+      const y = window.scrollY || 0;
+      heroBg.style.setProperty('--parallax', `${Math.round(y * 0.35)}px`);
+    };
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  }
+
+  // ---------- Carousels ----------
+  function initCarousels(){
+    document.querySelectorAll('[data-carousel]').forEach((wrap)=>{
+      const scroller = wrap.querySelector('.hscroll');
+      const left = wrap.querySelector('[data-left]');
+      const right = wrap.querySelector('[data-right]');
+      if (!scroller) return;
+
+      const step = ()=> Math.min(480, scroller.clientWidth * 0.7);
+
+      function scrollBy(dx){
+        scroller.scrollBy({left: dx, behavior: reduceMotion ? 'auto' : 'smooth'});
+      }
+
+      left?.addEventListener('click', ()=> scrollBy(-step()));
+      right?.addEventListener('click', ()=> scrollBy(step()));
+
+      // keyboard accessibility (left/right when focused)
+      scroller.setAttribute('tabindex','0');
+      scroller.addEventListener('keydown', (e)=>{
+        if (e.key === 'ArrowLeft'){ e.preventDefault(); scrollBy(-step()); }
+        if (e.key === 'ArrowRight'){ e.preventDefault(); scrollBy(step()); }
+      });
+    });
+  }
+
+  // ---------- Command Palette (⌘K / Ctrl+K) ----------
+  function initCommandPalette(){
+    const palette = document.getElementById('cmdk');
+    const input = document.getElementById('cmdkInput');
+    const list = document.getElementById('cmdkList');
+    if (!palette || !input || !list) return;
+
+    const actions = [
+      {label:'Go: Home', kbd:'G H', run:()=> location.href='index.html'},
+      {label:'Go: Products', kbd:'G P', run:()=> location.href='products.html'},
+      {label:'Go: Dashboard', kbd:'G D', run:()=> location.href='dashboard.html'},
+      {label:'Go: Resources', kbd:'G R', run:()=> location.href='resources.html'},
+      {label:'Create purchase order', kbd:'P O', run:()=> alert('Demo: Create PO flow')},
+      {label:'Open cart', kbd:'C', run:()=> openDrawer()},
+      {label:'Saved view: Contract items', kbd:'V 1', run:()=> applySavedView('contract')},
+      {label:'Saved view: Approved suppliers', kbd:'V 2', run:()=> applySavedView('approved')},
+      {label:'Saved view: Branch essentials', kbd:'V 3', run:()=> applySavedView('essentials')}
+    ];
+
+    let filtered = actions.slice();
+    let activeIdx = 0;
+
+    function render(){
+      list.innerHTML = '';
+      filtered.forEach((a, idx)=>{
+        const div = document.createElement('div');
+        div.className = 'palette-item';
+        div.setAttribute('role','option');
+        div.setAttribute('aria-selected', idx===activeIdx ? 'true' : 'false');
+        div.innerHTML = `<div style="font-weight:800;">${a.label}</div><div class="kbd">${a.kbd}</div>`;
+        div.addEventListener('click', ()=>{ a.run(); close(); });
+        list.appendChild(div);
+      });
+    }
+
+    function open(){
+      palette.classList.add('open');
+      palette.setAttribute('aria-hidden','false');
+      input.value='';
+      filtered = actions.slice();
+      activeIdx=0;
+      render();
+      setTimeout(()=>input.focus(), 0);
+    }
+
+    function close(){
+      palette.classList.remove('open');
+      palette.setAttribute('aria-hidden','true');
+    }
+
+    function onKeyDown(e){
+      const isK = (e.key.toLowerCase() === 'k') && (e.metaKey || e.ctrlKey);
+      if (isK){
+        e.preventDefault();
+        if (palette.classList.contains('open')) close(); else open();
+      }
+      if (e.key === 'Escape' && palette.classList.contains('open')){
+        e.preventDefault(); close();
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+
+    input.addEventListener('input', ()=>{
+      const q = input.value.trim().toLowerCase();
+      filtered = actions.filter(a=>a.label.toLowerCase().includes(q));
+      activeIdx=0;
+      render();
+    });
+
+    input.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowDown'){ e.preventDefault(); activeIdx = Math.min(filtered.length-1, activeIdx+1); render(); }
+      if (e.key === 'ArrowUp'){ e.preventDefault(); activeIdx = Math.max(0, activeIdx-1); render(); }
+      if (e.key === 'Enter'){
+        e.preventDefault();
+        const a = filtered[activeIdx];
+        if (a){ a.run(); close(); }
+      }
+    });
+
+    palette.addEventListener('click', (e)=>{
+      if (e.target === palette) close();
+    });
+  }
+
+  // ---------- Cart / PO Summary ----------
+  const CART_KEY = 'b2b_cart_v1';
+  const MAX_BUDGET = 40000;
+
+  function loadCart(){
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; }
+  }
+  function saveCart(items){
+    localStorage.setItem(CART_KEY, JSON.stringify(items));
+    updateCartUI();
+  }
+  function money(n){
+    return n.toLocaleString(undefined,{style:'currency', currency:'USD'});
+  }
+  function cartTotal(items){
+    return items.reduce((s,i)=>s + i.price*i.qty, 0);
+  }
+
+  function updateCartUI(){
+    const items = loadCart();
+    const meta = document.getElementById('cartMeta');
+    const totalEl = document.getElementById('cartTotal');
+    const list = document.getElementById('cartItems');
+    const impact = document.getElementById('budgetImpact');
+
+    if (meta) meta.textContent = `${items.reduce((s,i)=>s+i.qty,0)} items • ${money(cartTotal(items))}`;
+    if (totalEl) totalEl.textContent = money(cartTotal(items));
+    if (impact){
+      const t = cartTotal(items);
+      const pct = Math.min(100, Math.round((t/MAX_BUDGET)*100));
+      impact.textContent = `Impact: ${pct}% of cap`;
+      impact.style.borderColor = t > MAX_BUDGET ? 'rgba(236,32,40,.65)' : 'var(--line)';
+      impact.style.color = t > MAX_BUDGET ? 'var(--red)' : 'var(--text)';
+    }
+    if (!list) return;
+
+    list.innerHTML = '';
+    if (!items.length){
+      const empty = document.createElement('div');
+      empty.className = 'card';
+      empty.style.padding = '14px';
+      empty.innerHTML = `<div style="font-weight:900;">Your cart is empty</div><div class="mini" style="margin-top:6px;">Add items from the catalog to build a purchase order.</div>`;
+      list.appendChild(empty);
+      return;
+    }
+
+    items.forEach((it, idx)=>{
+      const row = document.createElement('div');
+      row.className = 'card';
+      row.style.padding = '12px';
+      row.innerHTML = `
+        <div class="drawer-row">
+          <div class="drawer-item">
+            <img src="${it.img}" alt="${it.name}" loading="lazy"/>
+            <div>
+              <div style="font-weight:900;">${it.name}</div>
+              <div class="mini">${it.sku} • ${it.brand}</div>
+              <div style="font-weight:900; color: var(--red); margin-top:6px;">${money(it.price)}</div>
+            </div>
+          </div>
+          <div style="display:grid; gap:8px; justify-items:end;">
+            <div class="qty" aria-label="Quantity controls">
+              <button class="btn" type="button" data-dec="${idx}" aria-label="Decrease quantity">−</button>
+              <strong aria-label="Quantity">${it.qty}</strong>
+              <button class="btn" type="button" data-inc="${idx}" aria-label="Increase quantity">+</button>
+            </div>
+            <button class="btn btn-ghost" type="button" data-rm="${idx}" aria-label="Remove item">Remove</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    list.querySelectorAll('[data-inc]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const i = Number(btn.getAttribute('data-inc'));
+        const items = loadCart();
+        items[i].qty += 1;
+        saveCart(items);
+      });
+    });
+    list.querySelectorAll('[data-dec]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const i = Number(btn.getAttribute('data-dec'));
+        const items = loadCart();
+        items[i].qty = Math.max(1, items[i].qty - 1);
+        saveCart(items);
+      });
+    });
+    list.querySelectorAll('[data-rm]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const i = Number(btn.getAttribute('data-rm'));
+        const items = loadCart();
+        items.splice(i,1);
+        saveCart(items);
+      });
+    });
+  }
+
+  function openDrawer(){
+    const drawer = document.getElementById('cartDrawer');
+    const backdrop = document.getElementById('backdrop');
+    if (!drawer || !backdrop) return;
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden','false');
+    backdrop.classList.add('open');
+    backdrop.setAttribute('aria-hidden','false');
+    updateCartUI();
+    // focus close button
+    drawer.querySelector('[data-close-drawer]')?.focus();
+  }
+  function closeDrawer(){
+    const drawer = document.getElementById('cartDrawer');
+    const backdrop = document.getElementById('backdrop');
+    if (!drawer || !backdrop) return;
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true');
+    backdrop.classList.remove('open');
+    backdrop.setAttribute('aria-hidden','true');
+  }
+
+  // Saved views (Products page)
+  function applySavedView(view){
+    const el = document.querySelector('[data-savedview]');
+    if (el) el.value = view;
+    // lightweight demo: set badges/filters visually
+    const banner = document.getElementById('savedViewBanner');
+    if (banner){
+      const map = {
+        contract: 'Showing Contract Items • negotiated pricing applied',
+        approved: 'Approved Suppliers Only • policy compliant',
+        essentials: 'Branch Essentials • frequently reordered in BC + AB'
+      };
+      banner.textContent = map[view] || '';
+      banner.style.display = view ? 'block' : 'none';
+    }
+  }
+
+  function initProducts(){
+    const grid = document.querySelector('.product-grid');
+    if (!grid) return;
+
+    // Skeleton loading effect
+    if (!reduceMotion){
+      const real = grid.innerHTML;
+      grid.innerHTML = '';
+      for (let i=0;i<12;i++){
+        const sk = document.createElement('div');
+        sk.className = 'prod';
+        sk.innerHTML = `
+          <div class="thumb skel"></div>
+          <div class="skel" style="height:16px; width:70%; margin-top:10px;"></div>
+          <div class="skel" style="height:12px; width:55%; margin-top:8px;"></div>
+          <div class="skel" style="height:16px; width:35%; margin-top:12px;"></div>
+          <div class="skel" style="height:44px; width:100%; margin-top:14px; border-radius:12px;"></div>
+        `;
+        grid.appendChild(sk);
+      }
+      setTimeout(()=>{ grid.innerHTML = real; wireProductCTAs(); }, 550);
+    } else {
+      wireProductCTAs();
+    }
+
+    // View cart buttons
+    document.querySelectorAll('[data-open-cart]').forEach(btn=>{
+      btn.addEventListener('click', openDrawer);
+    });
+
+    // Saved views dropdown (if present)
+    const sv = document.querySelector('[data-savedview]');
+    sv?.addEventListener('change', ()=> applySavedView(sv.value));
+  }
+
+  function wireProductCTAs(){
+    document.querySelectorAll('[data-add]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const card = btn.closest('.prod');
+        if (!card) return;
+        const item = {
+          id: card.getAttribute('data-id'),
+          name: card.getAttribute('data-name'),
+          sku: card.getAttribute('data-sku'),
+          brand: card.getAttribute('data-brand'),
+          price: Number(card.getAttribute('data-price') || '0'),
+          img: card.querySelector('img')?.getAttribute('src') || ''
+        };
+        const items = loadCart();
+        const existing = items.find(i=>i.id===item.id);
+        if (existing) existing.qty += 1;
+        else items.push({...item, qty:1});
+        saveCart(items);
+        openDrawer();
+      });
+    });
+  }
+
+  // Submit PO demo
+  function initPOActions(){
+    document.getElementById('clearCart')?.addEventListener('click', ()=>{
+      localStorage.removeItem(CART_KEY);
+      updateCartUI();
+    });
+
+    document.getElementById('submitPO')?.addEventListener('click', ()=>{
+      const items = loadCart();
+      const total = cartTotal(items);
+      if (!items.length){ alert('Cart is empty. Add items from Products.'); return; }
+
+      // Demo approval policy
+      const needsApproval = total >= 5000 || items.some(i=>i.price*i.qty >= 2500);
+      localStorage.setItem('b2b_last_po_total', String(total));
+      localStorage.setItem('b2b_last_po_needs_approval', needsApproval ? '1' : '0');
+      localStorage.setItem('b2b_last_po_branch', document.getElementById('shipBranch')?.value || 'Vancouver, BC');
+
+      // Create an approval item for dashboard
+      const approvals = JSON.parse(localStorage.getItem('b2b_approvals_v1') || '[]');
+      approvals.unshift({
+        id: 'PO-CT-' + Math.floor(Math.random()*90000+10000),
+        branch: localStorage.getItem('b2b_last_po_branch'),
+        total: total,
+        supplier: 'Mixed',
+        created: new Date().toISOString(),
+        status: needsApproval ? 'Pending approval' : 'Approved (auto)',
+        flags: needsApproval ? ['Threshold', 'Budget policy'] : []
+      });
+      localStorage.setItem('b2b_approvals_v1', JSON.stringify(approvals.slice(0,12)));
+
+      if (needsApproval){
+        alert('Submitted. This PO routes to approvals (demo policy). Check Dashboard → Approvals.');
+      } else {
+        alert('Submitted. Auto-approved (demo policy).');
+      }
+      closeDrawer();
+    });
+
+    // Close actions
+    document.querySelectorAll('[data-close-drawer]').forEach(btn=>btn.addEventListener('click', closeDrawer));
+    document.getElementById('backdrop')?.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeDrawer(); });
+  }
+
+  // ---------- Dashboard tabs + modules ----------
+  function initTabs(){
+    const root = document.querySelector('[data-tabs]');
+    if (!root) return;
+
+    const tabs = Array.from(root.querySelectorAll('[role="tab"]'));
+    const panes = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+    let current = tabs.findIndex(t=>t.getAttribute('aria-selected')==='true');
+    if (current < 0) current = 0;
+
+    function activate(idx){
+      tabs.forEach((t,i)=>{
+        const selected = i===idx;
+        t.setAttribute('aria-selected', selected ? 'true' : 'false');
+        t.tabIndex = selected ? 0 : -1;
+      });
+      panes.forEach((p,i)=>{
+        p.classList.toggle('is-active', i===idx);
+        if (i===idx){
+          p.classList.remove('anim-in');
+          void p.offsetWidth;
+          p.classList.add('anim-in');
+        }
+      });
+      current = idx;
+      tabs[idx].focus();
+    }
+
+    tabs.forEach((t,i)=>{
+      t.addEventListener('click', ()=>activate(i));
+      t.addEventListener('keydown', (e)=>{
+        if (e.key==='ArrowRight'){ e.preventDefault(); activate((current+1)%tabs.length); }
+        if (e.key==='ArrowLeft'){ e.preventDefault(); activate((current-1+tabs.length)%tabs.length); }
+        if (e.key==='Home'){ e.preventDefault(); activate(0); }
+        if (e.key==='End'){ e.preventDefault(); activate(tabs.length-1); }
+      });
+    });
+
+    // initial
+    panes.forEach((p,i)=>p.classList.toggle('is-active', i===current));
+  }
+
+  function initApprovalsTable(){
+    const table = document.getElementById('approvalsTable');
+    if (!table) return;
+
+    const data = JSON.parse(localStorage.getItem('b2b_approvals_v1') || '[]');
+    if (!data.length){
+      table.innerHTML = `<div class="card" style="padding:14px;"><div style="font-weight:900;">No approvals yet</div><div class="mini" style="margin-top:6px;">Submit a PO from Products to generate a pending approval.</div></div>`;
+      return;
+    }
+
+    table.innerHTML = '';
+    data.forEach((po, idx)=>{
+      const row = document.createElement('div');
+      row.className = 'card hover';
+      row.style.padding = '14px';
+      row.style.cursor = 'pointer';
+      row.innerHTML = `
+        <div class="drawer-row">
+          <div>
+            <div style="font-weight:900;">${po.id} • ${po.branch}</div>
+            <div class="mini">${new Date(po.created).toLocaleString()} • ${po.supplier}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:900; color: var(--red);">${money(po.total)}</div>
+            <div class="mini">${po.status}</div>
+          </div>
+        </div>
+        <div class="hr" style="margin:12px 0;"></div>
+        <div class="mini">Flags: ${po.flags.length ? po.flags.join(', ') : 'None'}</div>
+        <div class="details" style="display:none; margin-top:12px;">
+          <div class="grid" style="grid-template-columns: 1fr; gap:10px;">
+            <div class="card" style="padding:12px; background: var(--bg2);">
+              <div style="font-weight:900;">Policy checks</div>
+              <ul style="margin:8px 0 0; padding-left:18px;">
+                <li>Budget cap: ${po.total > MAX_BUDGET ? 'Exceeded' : 'Within cap'}</li>
+                <li>Supplier compliance: ${po.supplier==='Mixed' ? 'Review required' : 'OK'}</li>
+                <li>Threshold routing: ${po.total >= 5000 ? 'Yes' : 'No'}</li>
+              </ul>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn btn-primary" type="button" data-approve="${idx}">Approve</button>
+              <button class="btn" type="button" data-reject="${idx}">Request changes</button>
+            </div>
+          </div>
+        </div>
+      `;
+      row.addEventListener('click', ()=>{
+        const details = row.querySelector('.details');
+        const open = details.style.display !== 'none';
+        details.style.display = open ? 'none' : 'block';
+        if (!reduceMotion && !open){
+          details.classList.remove('anim-in');
+          void details.offsetWidth;
+          details.classList.add('anim-in');
+        }
+      });
+      table.appendChild(row);
+    });
+
+    table.querySelectorAll('[data-approve]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const i = Number(btn.getAttribute('data-approve'));
+        const data = JSON.parse(localStorage.getItem('b2b_approvals_v1') || '[]');
+        data[i].status = 'Approved';
+        data[i].flags = [];
+        localStorage.setItem('b2b_approvals_v1', JSON.stringify(data));
+        initApprovalsTable();
+      });
+    });
+
+    table.querySelectorAll('[data-reject]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        alert('Demo: request changes sent to requester.');
+      });
+    });
+  }
+
+  // Activity timeline filters
+  function initActivityFilters(){
+    const list = document.getElementById('activityList');
+    const branch = document.getElementById('filterBranch');
+    const type = document.getElementById('filterType');
+    if (!list || !branch || !type) return;
+
+    const items = Array.from(list.querySelectorAll('[data-branch]'));
+    function apply(){
+      const b = branch.value;
+      const t = type.value;
+      items.forEach(el=>{
+        const okB = (b==='All') || (el.dataset.branch===b);
+        const okT = (t==='All') || (el.dataset.type===t);
+        el.style.display = (okB && okT) ? 'flex' : 'none';
+      });
+    }
+    branch.addEventListener('change', apply);
+    type.addEventListener('change', apply);
+    apply();
+  }
+
+  // ---------- Boot ----------
+  document.addEventListener('DOMContentLoaded', ()=>{
+    if (window.lucide && typeof window.lucide.createIcons==='function'){ window.lucide.createIcons(); }
+    initParallax();
+    initCarousels();
+    initReveals();
+
+    initCommandPalette();
+    initProducts();
+    initPOActions();
+
+    initTabs();
+    initApprovalsTable();
+    initActivityFilters();
+
+    // global "View cart" buttons on any page
+    document.querySelectorAll('[data-open-cart]').forEach(btn=>btn.addEventListener('click', openDrawer));
+
+    updateCartUI();
+  });
+})();
+
+
+(function(){
+  // Chart.js is only used on the dashboard.
+  if (!window.Chart) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Helpers ----------
+  const moneyTick = (v)=>{
+    const n = Number(v);
+    if (Number.isNaN(n)) return v;
+    if (Math.abs(n) >= 1000) return `$${Math.round(n/1000)}K`;
+    return `$${n}`;
+  };
+
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+  function buildSpendSeries(months){
+    // Believable CAD values, BC + AB heavy.
+    const base = [
+      5200, 5600, 5900, 6100, 6400, 6700, 7200, 7600, 8000, 8600, 9100, 9800,
+      10400, 11100, 12000, 13200, 14500, 15800, 15100, 14600, 14900, 15500, 16200, 17100,
+      18400, 19200, 20500, 21400, 22600, 23200, 24100, 24800, 25600, 26300, 27100, 28379
+    ];
+    const arr = base.slice(0, months);
+    return {
+      labels: arr.map((_, i)=>`${i+1}m`),
+      values: arr
+    };
+  }
+
+  // ---------- Chart instances ----------
+  let spendChart, categoryChart, approvalChart, savingsChart, forecastChart;
+
+  function initSpend(){
+    const el = document.getElementById('spendChart');
+    if (!el) return;
+
+    const ctx = el.getContext('2d');
+    const months = 36;
+    const series = buildSpendSeries(months);
+    const budget = new Array(months).fill(40000);
+    const target = new Array(months).fill(35000);
+
+    spendChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: series.labels,
+        datasets: [
+          {
+            label: 'Spend',
+            data: series.values,
+            borderWidth: 3,
+            pointRadius: 0,
+            tension: 0.28
+          },
+          {
+            label: 'Budget cap',
+            data: budget,
+            borderWidth: 2,
+            borderDash: [6, 6],
+            pointRadius: 0,
+            tension: 0,
+          },
+          {
+            label: 'Target',
+            data: target,
+            borderWidth: 2,
+            borderDash: [2, 6],
+            pointRadius: 0,
+            tension: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: prefersReduced ? false : {duration: 650, easing:'easeOutQuart'},
+        plugins: {
+          legend: {display: false},
+          tooltip: {
+            callbacks: {
+              label: (ctx)=> `${ctx.dataset.label}: ${moneyTick(ctx.parsed.y)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {color: 'rgba(17,24,39,0.06)'},
+            ticks: {maxTicksLimit: 6}
+          },
+          y: {
+            beginAtZero: true,
+            suggestedMax: 45000,
+            grid: {color: 'rgba(17,24,39,0.06)'},
+            ticks: {
+              callback: (v)=> moneyTick(v)
+            }
+          }
+        }
+      }
+    });
+
+    // Range buttons
+    document.querySelectorAll('.segmented .seg').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.segmented .seg').forEach(b=>b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const range = Number(btn.dataset.range || 36);
+        const s = buildSpendSeries(range);
+        spendChart.data.labels = s.labels;
+        spendChart.data.datasets[0].data = s.values;
+        spendChart.data.datasets[1].data = new Array(range).fill(40000);
+        spendChart.data.datasets[2].data = new Array(range).fill(35000);
+        spendChart.update();
+      });
+    });
+  }
+
+  function initCategory(){
+    const el = document.getElementById('categoryChart');
+    if (!el) return;
+    const ctx = el.getContext('2d');
+    categoryChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Automotive', 'Tools', 'Safety', 'Electrical', 'Fleet'],
+        datasets: [{
+          data: [62, 18, 10, 6, 4],
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        animation: prefersReduced ? false : {duration: 650, easing:'easeOutQuart'},
+        plugins: {
+          legend: {position: 'bottom', labels: {boxWidth: 10, usePointStyle:true}},
+          tooltip: {callbacks: {label: (c)=> `${c.label}: ${c.parsed}%`}}
+        }
+      }
+    });
+  }
+
+  function initApprovals(){
+    const el = document.getElementById('approvalChart');
+    if (!el) return;
+    const ctx = el.getContext('2d');
+
+    approvalChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Requested', 'Policy check', 'Ops review', 'Finance', 'Approved'],
+        datasets: [{
+          label: 'Items',
+          data: [12, 7, 5, 3, 9],
+          borderRadius: 10,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: prefersReduced ? false : {duration: 650, easing:'easeOutQuart'},
+        plugins: {legend: {display:false}},
+        scales: {
+          x: {grid: {display:false}},
+          y: {beginAtZero:true, ticks:{stepSize: 2}, grid:{color: 'rgba(17,24,39,0.06)'}}
+        }
+      }
+    });
+  }
+
+  function initSavings(){
+    const el = document.getElementById('savingsChart');
+    if (!el) return;
+    const ctx = el.getContext('2d');
+
+    savingsChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Contract pricing', 'Supplier consolidation', 'Auto‑reorder', 'Fewer rush fees'],
+        datasets: [{
+          label: 'Annual savings (CAD)',
+          data: [6200, 5400, 4200, 2620],
+          borderRadius: 10,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: prefersReduced ? false : {duration: 650, easing:'easeOutQuart'},
+        plugins: {
+          legend: {display:false},
+          tooltip: {callbacks: {label: (c)=> `${moneyTick(c.parsed.y)}`}}
+        },
+        scales: {
+          x: {grid: {display:false}},
+          y: {beginAtZero:true, grid:{color:'rgba(17,24,39,0.06)'}, ticks:{callback:(v)=> moneyTick(v)}}
+        }
+      }
+    });
+  }
+
+  function initForecast(){
+    const el = document.getElementById('forecastChart');
+    if (!el) return;
+    const ctx = el.getContext('2d');
+
+    const labels = ['Today','+3d','+6d','+9d','+12d','+15d'];
+    const inventory = [42, 36, 29, 21, 13, 8];
+    const threshold = labels.map(()=> 12);
+
+    forecastChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {label: 'Projected stock', data: inventory, borderWidth: 3, pointRadius: 0, tension: 0.3},
+          {label: 'Reorder threshold', data: threshold, borderWidth: 2, borderDash: [6,6], pointRadius: 0, tension: 0}
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: prefersReduced ? false : {duration: 650, easing:'easeOutQuart'},
+        plugins: {legend:{display:false}},
+        scales: {
+          x: {grid:{display:false}},
+          y: {beginAtZero:true, suggestedMax: 50, grid:{color:'rgba(17,24,39,0.06)'}}
+        }
+      }
+    });
+  }
+
+  // Set sane defaults (no hardcoded colors—use CSS var mapping via currentColor)
+  // We intentionally keep defaults minimal. Colors will inherit from browser palette.
+  Chart.defaults.font.family = 'Lato, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+  Chart.defaults.color = '#111827';
+
+  // ---------- Init (when tab panes are visible) ----------
+  function initAll(){
+    try{
+      initSpend();
+      initCategory();
+      initApprovals();
+      initSavings();
+      initForecast();
+    }catch(e){
+      // Fail softly in a portfolio prototype.
+      console.warn('Chart init failed', e);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    initAll();
+
+    // Reflow charts on tab switch
+    document.querySelectorAll('[data-tabs] .tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        setTimeout(()=>{
+          [spendChart, categoryChart, approvalChart, savingsChart, forecastChart].forEach(ch=>{ if (ch) ch.resize(); });
+        }, 200);
+      });
+    });
+  });
+})();
+
+
+
+/* ---------- Simple hash router (single-file multi-page) ---------- */
+(function(){
+  const routes = ["home","products","dashboard","resources","industries","services","pricing","solutions"];
+  function norm(hash){
+    const h = (hash || "").replace(/^#/, "");
+    return routes.includes(h) ? h : "home";
+  }
+  function setActive(route){
+    document.querySelectorAll("[data-route]").forEach(sec=>{
+      sec.hidden = sec.getAttribute("data-route") !== route;
+    });
+    document.querySelectorAll("[data-nav]").forEach(a=>{
+      const r = a.getAttribute("data-nav");
+      a.setAttribute("aria-current", r===route ? "page" : "false");
+      a.classList.toggle("is-active", r===route);
+    });
+    // Scroll to top on route change (unless reduced motion)
+    try {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) window.scrollTo({top:0, behavior:"smooth"}); else window.scrollTo(0,0);
+    } catch(e){ window.scrollTo(0,0); }
+  }
+
+  function initHomeSpendChart(){
+    // Home page compact chart (Spend & Savings card)
+    const canvas = document.getElementById("spendChart");
+    if (!canvas) return;
+    if (typeof Chart === "undefined") {
+      console.error("Chart.js not loaded. Home Spend chart will not render.");
+      return;
+    }
+    // avoid double-init
+    if (canvas.__chart) return;
+
+    const ctx = canvas.getContext("2d");
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const labels = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
+    const spend = [12.4, 13.2, 14.0, 15.1, 16.3, 17.4, 18.0, 19.2, 20.4, 21.1, 22.6, 23.4].map(v=>v*1000);
+    const target = labels.map(()=>20000);
+
+    canvas.__chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Spend",
+            data: spend,
+            borderColor: "#EC2028",
+            backgroundColor: "rgba(236, 32, 40, 0.12)",
+            tension: 0.35,
+            fill: true,
+            pointRadius: 0,
+            borderWidth: 2
+          },
+          {
+            label: "Target",
+            data: target,
+            borderColor: "rgba(17,24,39,.35)",
+            borderDash: [6,6],
+            pointRadius: 0,
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: prefersReduced ? false : { duration: 650, easing: "easeOutQuart" },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx)=>{
+                const v = ctx.parsed.y || 0;
+                return `${ctx.dataset.label}: $${Math.round(v).toLocaleString()}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display:false }, ticks:{ maxTicksLimit: 6 } },
+          y: {
+            grid: { color: "rgba(17,24,39,.08)" },
+            ticks: {
+              callback: (v)=> {
+                const n = Number(v);
+                if (n >= 1000) return `$${Math.round(n/1000)}K`;
+                return `$${n}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function onRoute(){
+    const r = norm(location.hash);
+    setActive(r);
+    // init charts if relevant
+    if (r==="home") initHomeSpendChart();
+    // dashboard charts are initialized by existing dashboard script and guarded by canvas existence
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    // convert header links to hash routes if needed
+    document.querySelectorAll("a[data-nav]").forEach(a=>{
+      a.addEventListener("click", (e)=>{
+        const r = a.getAttribute("data-nav");
+        if (!r) return;
+        // allow normal navigation if modifier keys
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        location.hash = r;
+      });
+    });
+    onRoute();
+  });
+  window.addEventListener("hashchange", onRoute);
+})();
+
+  </script>
+</body>
+</html>
